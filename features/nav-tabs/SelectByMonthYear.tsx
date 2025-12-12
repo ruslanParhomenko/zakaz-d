@@ -22,9 +22,9 @@ export default function SelectByMonthYear({
   isLoading?: boolean;
 }) {
   const classNameSelect =
-    "w-18  h-7! border-0 md:border p-1 rounded-full text-blue-700 md:text-md text-xs  [&>svg]:hidden justify-center";
+    "w-18  h-8! bg-black font-bold  p-1 rounded-md text-white text-sm  [&>svg]:hidden justify-center";
   return (
-    <div className="flex justify-center items-center md:gap-4 gap-1 order-2">
+    <div className="flex justify-center items-center md:gap-4 gap-1">
       <Select
         value={month}
         onValueChange={(value) => setMonth(value)}
@@ -36,7 +36,7 @@ export default function SelectByMonthYear({
         <SelectContent>
           {MONTHS.map((month) => (
             <SelectItem key={month} value={month}>
-              {month}
+              {MONTHS.indexOf(month) + 1}
             </SelectItem>
           ))}
         </SelectContent>

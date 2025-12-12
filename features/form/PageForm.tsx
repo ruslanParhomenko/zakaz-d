@@ -1,66 +1,47 @@
 "use client";
+import DatePickerInput from "@/components/button/input/DatePickerInput";
 import NumericInput from "@/components/button/input/NumericInput";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+
 import { useForm } from "react-hook-form";
 
 export default function PageForm() {
   const form = useForm();
   return (
-    <div className="w-full max-w-md p-4">
-      <Form {...form}>
-        <form>
-          <FieldGroup>
-            <FieldSet>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="checkout-7j9-card-name-43j">
-                    рынок
-                  </FieldLabel>
-                  <NumericInput
-                    fieldName="cash"
-                    id="checkout-7j9-card-name-43j"
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="checkout-7j9-card-number-uw1">
-                    чек
-                  </FieldLabel>
-                  <NumericInput
-                    fieldName="card"
-                    id="checkout-7j9-card-number-uw1"
-                  />
-                </Field>
-              </FieldGroup>
-            </FieldSet>
-            <FieldSeparator />
+    <Form {...form}>
+      <form>
+        <div className="w-full  px-2 pt-12 flex flex-col h-[80vh]">
+          <FieldSet className="flex-1">
+            <FieldGroup>
+              <Field>
+                <Label className="text-blue-700">дата</Label>
+                <DatePickerInput fieldName="date" />
+              </Field>
 
-            <Field orientation="horizontal">
-              <Button type="submit">Submit</Button>
-              <Button variant="outline" type="button">
-                Cancel
-              </Button>
-            </Field>
-          </FieldGroup>
-        </form>
-      </Form>
-    </div>
+              <Field>
+                <Label className="text-blue-700">рынок</Label>
+                <NumericInput fieldName="cash" />
+              </Field>
+              <Field>
+                <FieldLabel className="text-blue-700">чек</FieldLabel>
+                <NumericInput fieldName="card" />
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+
+          <div className="mt-0 py-2 flex items-center justify-end gap-6">
+            <Button variant="outline" type="button">
+              Cancel
+            </Button>
+            <Button type="submit" variant={"default"}>
+              Submit
+            </Button>
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 }

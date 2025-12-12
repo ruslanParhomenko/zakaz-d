@@ -60,9 +60,7 @@ function NumericInput({
                   disabled={disabled}
                   onClick={() => setOpen(true)}
                   className={cn(
-                    "cursor-pointer text-end h-10",
-                    value && "border-0 shadow-none text-black! font-bold",
-                    Number(value) <= 0 ? "text-rd " : "",
+                    "text-end bg-gray-100 border-0 text-blue-700 rounded-md hover:bg-gray-700 text-md font-bold h-12",
                     className
                   )}
                 />

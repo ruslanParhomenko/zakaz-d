@@ -15,23 +15,19 @@ export default function SelectTabsByPatch({
   navItems: PageNavType[];
 }) {
   return (
-    <Tabs
-      value={patch}
-      onValueChange={(value) => setPatch(value)}
-      className="order-3 md:order-0"
-    >
-      <TabsList className="flex md:gap-2 h-8">
+    <Tabs value={patch} onValueChange={(value) => setPatch(value)}>
+      <TabsList className="flex md:gap-2 h-9">
         {navItems.map((page) => (
           <TabsTrigger
             key={page.title}
             value={page.href}
             disabled={isPending}
             className={cn(
-              "w-20 text-blue-700 cursor-pointer",
+              "w-22 text-white font-bold cursor-pointer",
               isPending && "opacity-50"
             )}
           >
-            <span className="truncate block w-full text-xs md:text-md text-bl">
+            <span className="truncate block w-full text-sm md:text-md text-bl">
               {page.title}
             </span>
           </TabsTrigger>

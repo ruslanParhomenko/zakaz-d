@@ -43,15 +43,12 @@ export default function NavMenuHeader({
   };
   return (
     <div className="py-4 sticky top-0 z-10 flex justify-center md:justify-start  gap-3">
-      {navItems.length > 0 && (
-        <SelectTabsByPatch
-          patch={patch}
-          setPatch={setPatch}
-          isPending={isPending}
-          navItems={navItems}
-        />
-      )}
-
+      <button
+        onClick={resetParams}
+        className="hover:text-black text-blue-700 hover:bg-transparent cursor-pointer  px-1"
+      >
+        <RefreshCcw className="w-4 h-4" />
+      </button>
       <SelectByMonthYear
         month={month}
         year={year}
@@ -60,12 +57,12 @@ export default function NavMenuHeader({
         isLoading={isPending}
       />
 
-      <button
-        onClick={resetParams}
-        className="hover:text-black text-blue-700 hover:bg-transparent cursor-pointer md:w-24 md:order-3 order-0 px-2"
-      >
-        <RefreshCcw className="w-4 h-4" />
-      </button>
+      <SelectTabsByPatch
+        patch={patch}
+        setPatch={setPatch}
+        isPending={isPending}
+        navItems={navItems}
+      />
     </div>
   );
 }
