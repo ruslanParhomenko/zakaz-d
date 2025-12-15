@@ -40,8 +40,10 @@ function DatePickerInput({
                     id={id}
                     variant={"outline"}
                     className={cn(
-                      "justify-end bg-gray-100 border-0 text-blue-700 rounded-md hover:bg-gray-700 text-md h-12",
-                      className
+                      "rounded-md bg-border",
+                      className,
+                      field.value &&
+                        "bg-background border-0 shadow-none font-bold"
                     )}
                   >
                     {field.value &&
@@ -53,7 +55,7 @@ function DatePickerInput({
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent align="center">
+              <PopoverContent align="center" className="w-65 p-1">
                 <Calendar
                   mode="single"
                   selected={field.value}

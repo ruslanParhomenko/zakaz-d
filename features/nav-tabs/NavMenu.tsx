@@ -4,7 +4,6 @@ import { useEffect, useState, useTransition } from "react";
 
 import { useRouter } from "next/navigation";
 import { RefreshCcw } from "lucide-react";
-import { MONTHS } from "./constants";
 import SelectTabsByPatch from "./SelectTabsByPatch";
 import SelectByMonthYear from "./SelectByMonthYear";
 
@@ -20,15 +19,20 @@ export default function NavMenuHeader({
   navItems: PageNavType[];
   mainRoute: string;
 }) {
+  const key = `patch_${mainRoute}`;
   const router = useRouter();
 
-  const [month, setMonth] = useState(MONTHS[new Date().getMonth()]);
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear().toString());
-  const [patch, setPatch] = useState("form");
+  const [patch, setPatch] = useState("add-cash");
 
   const [isPending, startTransition] = useTransition();
 
+  const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
+    if (!hydrated) return;
+    localStorage.setItem(key, patch);
     const url = `/${mainRoute}/${patch}?month=${month}&year=${year}`;
 
     startTransition(() => {
@@ -36,19 +40,25 @@ export default function NavMenuHeader({
     });
   }, [patch, month, year]);
 
-  const resetParams = () => {
-    setPatch("");
+  // const resetParams = () => {
+  //   setPatch("");
 
-    router.push(`/${mainRoute}`);
-  };
+  //   router.push(`/${mainRoute}`);
+  // };
+
+  useEffect(() => {
+    const saved = localStorage.getItem(key);
+    if (saved) setPatch(saved);
+    setHydrated(true);
+  }, []);
   return (
-    <div className="py-4 sticky top-0 z-10 flex justify-center md:justify-start  gap-3">
-      <button
+    <div className="py-4 sticky top-0 z-10 flex justify-center md:justify-end  gap-2 md:px-4 md:gap-10">
+      {/* <button
         onClick={resetParams}
         className="hover:text-black text-blue-700 hover:bg-transparent cursor-pointer  px-1"
       >
         <RefreshCcw className="w-4 h-4" />
-      </button>
+      </button> */}
       <SelectByMonthYear
         month={month}
         year={year}

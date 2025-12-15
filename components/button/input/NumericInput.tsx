@@ -60,8 +60,9 @@ function NumericInput({
                   disabled={disabled}
                   onClick={() => setOpen(true)}
                   className={cn(
-                    "text-end bg-gray-100 border-0 text-blue-700 rounded-md hover:bg-gray-700 text-md font-bold h-12",
-                    className
+                    "text-center bg-border rounded-md",
+                    className,
+                    value && "bg-background border-0 shadow-none font-bold"
                   )}
                 />
               </FormControl>

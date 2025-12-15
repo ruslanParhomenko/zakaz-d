@@ -1,15 +1,2 @@
-export const MONTHS = [
-  "january",
-  "february",
-  "march",
-  "april",
-  "may",
-  "june",
-  "july",
-  "august",
-  "september",
-  "october",
-  "november",
-  "december",
-];
+export const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 export const YEAR = ["2025", "2026", "2027", "2028", "2029", "2030"];

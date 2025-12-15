@@ -7,8 +7,12 @@ const navItems = [
     href: "archive",
   },
   {
-    title: "форма",
-    href: "form",
+    title: "закупка",
+    href: "purchase",
+  },
+  {
+    title: "поступление",
+    href: "add-cash",
   },
 ];
 
