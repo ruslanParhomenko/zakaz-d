@@ -24,9 +24,9 @@ export default function PageAddCash({
   year,
 }: {
   data?: AddCashTypeData["days"][number];
-  day: number;
-  month: number;
-  year: number;
+  day?: number;
+  month?: number;
+  year?: number;
 }) {
   const router = useRouter();
 
