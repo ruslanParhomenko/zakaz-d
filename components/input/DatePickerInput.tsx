@@ -19,10 +19,12 @@ function DatePickerInput({
   fieldName,
   className,
   id,
+  disabled = false,
 }: {
   fieldName: string;
   className?: string;
   id?: string;
+  disabled?: boolean;
 }) {
   const { control } = useFormContext();
 
@@ -37,6 +39,7 @@ function DatePickerInput({
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
+                    disabled={disabled}
                     id={id}
                     variant={"outline"}
                     className={cn(

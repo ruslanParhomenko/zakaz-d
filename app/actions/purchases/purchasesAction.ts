@@ -11,12 +11,13 @@ export type PurchasesTypeData = {
   days: {
     day: number;
     purchase: string;
-    fuel: number;
-    cleaning: number;
-    payment: number;
+    fuel: string;
+    cleaning: string;
+    payment: string;
   }[];
 };
 
+// create day purchase
 export async function createPurchaseByDay(formData: PurchaseType) {
   const day = formData.date.getDate();
   const month = formData.date.getMonth() + 1;
@@ -49,14 +50,52 @@ export async function createPurchaseByDay(formData: PurchaseType) {
     const days = data?.days ?? [];
 
     const index = days.findIndex((d: any) => d.day === day);
-
     if (index === -1) {
       days.push(newDayData);
     } else {
       days[index] = newDayData;
     }
-
     tx.update(docRef, { days });
+  });
+
+  updateTag("purchases");
+
+  return docId;
+}
+
+// update day
+
+// delete day
+
+export async function deletePurchaseByDay({
+  day,
+  month,
+  year,
+}: {
+  day: number;
+  month: number;
+  year: number;
+}) {
+  const docId = `${year}-${month}`;
+  const docRef = db.collection("purchases").doc(docId);
+
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(docRef);
+
+    if (!snap.exists) {
+      throw new Error("Документ за месяц не найден");
+    }
+
+    const docData = snap.data();
+    const days = docData?.days ?? [];
+
+    const filteredDays = days.filter((d: any) => d.day !== day);
+
+    if (filteredDays.length === days.length) {
+      throw new Error(`Запись за ${day} число не найдена`);
+    }
+
+    tx.update(docRef, { days: filteredDays });
   });
 
   updateTag("purchases");

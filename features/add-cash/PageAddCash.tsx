@@ -1,24 +1,41 @@
 "use client";
-import { FieldPath, SubmitHandler, useForm } from "react-hook-form";
+import { FieldPath, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { AddCashType, defaultValuesAddCash, schemaAddCash } from "./schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "sonner";
-import { createAddCashByDay } from "@/app/actions/add-cash/addCashAction";
+import {
+  AddCashTypeData,
+  createAddCashByDay,
+} from "@/app/actions/add-cash/addCashAction";
 import { Form } from "@/components/ui/form";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import DatePickerInput from "@/components/button/input/DatePickerInput";
+import DatePickerInput from "@/components/input/DatePickerInput";
 import { RefreshCcw, Trash2Icon } from "lucide-react";
-import NumericInput from "@/components/button/input/NumericInput";
+import NumericInput from "@/components/input/NumericInput";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function PageAddCash() {
+export default function PageAddCash({
+  data,
+  day,
+  month,
+  year,
+}: {
+  data?: AddCashTypeData["days"][number];
+  day: number;
+  month: number;
+  year: number;
+}) {
+  const router = useRouter();
+
   const form = useForm<AddCashType>({
     resolver: yupResolver(schemaAddCash),
     defaultValues: defaultValuesAddCash,
   });
 
-  const value = form.watch();
+  const addCash = useWatch({ control: form.control, name: "addCash" });
 
   const resetField = (nameField: FieldPath<AddCashType>) => {
     form.resetField(nameField);
@@ -28,8 +45,8 @@ export default function PageAddCash() {
     try {
       await createAddCashByDay(data);
       toast.success("Данные сохранены");
+      router.back();
     } catch (error) {
-      console.error("Ошибка при сохранении данных:", error);
       toast.error("Не удалось сохранить данные. Повторите попытку.");
     }
   };
@@ -38,6 +55,15 @@ export default function PageAddCash() {
   const classNameField = "grid grid-cols-[45%_40%_10%]";
   const classNameIcon = "text-red-600 w-4 h-4";
   const classNameInput = "text-md w-30";
+
+  useEffect(() => {
+    if (!data || !day || !month || !year) return;
+
+    form.reset({
+      date: new Date(year, month - 1, day),
+      addCash: data.addCash,
+    });
+  }, [data, day, month, year]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -63,7 +89,7 @@ export default function PageAddCash() {
                     fieldName="addCash"
                     className={classNameInput}
                   />
-                  {value.addCash > 0 && (
+                  {addCash && (
                     <Trash2Icon
                       className={classNameIcon}
                       onClick={() => resetField("addCash")}
@@ -75,11 +101,17 @@ export default function PageAddCash() {
           </div>
 
           <div className="mt-0 py-2 flex items-center justify-end gap-6">
-            <Button variant="outline" type="button">
-              Cancel
-            </Button>
-            <Button type="submit" variant={"default"}>
-              Submit
+            {data && (
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => router.back()}
+              >
+                Выйти
+              </Button>
+            )}
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              Сохранить
             </Button>
           </div>
         </div>

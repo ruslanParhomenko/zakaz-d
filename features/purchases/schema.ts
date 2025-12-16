@@ -3,10 +3,10 @@ import * as yup from "yup";
 export const schemaPurchase = yup.object().shape({
   date: yup.date().required().default(new Date()),
 
-  purchase: yup.number().default(0),
-  fuel: yup.number().default(0),
-  cleaning: yup.number().default(0),
-  payment: yup.number().default(0),
+  purchase: yup.string().default(""),
+  fuel: yup.string().default(""),
+  cleaning: yup.string().default(""),
+  payment: yup.string().default(""),
 });
 
 export type PurchaseType = yup.InferType<typeof schemaPurchase>;

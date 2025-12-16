@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { RefreshCcw } from "lucide-react";
 import SelectTabsByPatch from "./SelectTabsByPatch";
 import SelectByMonthYear from "./SelectByMonthYear";
@@ -21,18 +21,18 @@ export default function NavMenuHeader({
 }) {
   const key = `patch_${mainRoute}`;
   const router = useRouter();
+  const patchName = usePathname();
+  const patchTabs = patchName?.split("/")[2];
+
+  console.log(patchName);
 
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear().toString());
-  const [patch, setPatch] = useState("add-cash");
+  const [patch, setPatch] = useState("");
 
   const [isPending, startTransition] = useTransition();
 
-  const [hydrated, setHydrated] = useState(false);
-
   useEffect(() => {
-    if (!hydrated) return;
-    localStorage.setItem(key, patch);
     const url = `/${mainRoute}/${patch}?month=${month}&year=${year}`;
 
     startTransition(() => {
@@ -46,11 +46,6 @@ export default function NavMenuHeader({
   //   router.push(`/${mainRoute}`);
   // };
 
-  useEffect(() => {
-    const saved = localStorage.getItem(key);
-    if (saved) setPatch(saved);
-    setHydrated(true);
-  }, []);
   return (
     <div className="py-4 sticky top-0 z-10 flex justify-center md:justify-end  gap-2 md:px-4 md:gap-10">
       {/* <button

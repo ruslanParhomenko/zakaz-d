@@ -8,7 +8,7 @@ const navItems = [
   },
   {
     title: "закупка",
-    href: "purchase",
+    href: "purchases",
   },
   {
     title: "поступление",
