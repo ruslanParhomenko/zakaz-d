@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getMonthDays } from "@/lib/utils";
+import { getMonthDays, MONTHS_STRING } from "@/lib/utils";
 import {
   deletePurchaseByDay,
   PurchasesTypeData,
@@ -31,6 +31,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { Separator } from "@radix-ui/react-select";
 
 export default function PageArchive({
   dataPurchases,
@@ -49,121 +50,125 @@ export default function PageArchive({
 }) {
   const router = useRouter();
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<{
-    addCashId?: string | number;
-    purchaseId?: string | number;
-  } | null>(null);
+  type DialogMode = "edit" | "delete";
 
-  if (!dataPurchases || !dataAddCash) return null;
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<DialogMode>("edit");
+
+  const [selectedIds, setSelectedIds] = useState<{
+    addCashId?: number;
+    purchaseId?: number;
+  } | null>(null);
 
   const days = getMonthDays({ month, year });
 
-  const initialBalance = Number(dataBalance.initialBalance || 0);
+  const initialBalance = Number(dataBalance?.initialBalance || 0);
 
-  const totalIncome = dataAddCash.days.reduce(
-    (acc, day) => acc + Number(day.addCash || 0),
+  // ✅ totals
+  const totalIncome = Object.values(dataAddCash?.days || {}).reduce(
+    (acc, d) => acc + Number(d.addCash || 0),
     0
   );
 
-  const totalExpense = dataPurchases.days.reduce(
-    (acc, day) =>
-      acc +
-      Number(day.purchase || 0) +
-      Number(day.fuel || 0) +
-      Number(day.cleaning || 0) +
-      Number(day.payment || 0),
-    0
-  );
+  const totalExpense =
+    Object.values(dataPurchases?.days || {}).reduce(
+      (acc, d) =>
+        acc +
+        Number(d.purchase || 0) +
+        Number(d.fuel || 0) +
+        Number(d.cleaning || 0) +
+        Number(d.payment || 0),
+      0
+    ) || 0;
 
   const handleEditClick = ({
     addCashId,
     purchaseId,
   }: {
-    addCashId?: string | number;
-    purchaseId?: string | number;
+    addCashId?: number;
+    purchaseId?: number;
   }) => {
-    // есть оба — открываем диалог
     if (addCashId && purchaseId) {
       setSelectedIds({ addCashId, purchaseId });
+      setDialogMode("edit");
       setDialogOpen(true);
       return;
     }
 
-    // только add-cash
     if (addCashId) {
       router.push(`/home/add-cash/${addCashId}?month=${month}&year=${year}`);
       return;
     }
 
-    // только purchases
     if (purchaseId) {
       router.push(`/home/purchases/${purchaseId}?month=${month}&year=${year}`);
     }
   };
 
-  const deleteDayPurchase = ({
+  const handleDeleteClick = ({
     addCashId,
     purchaseId,
   }: {
-    addCashId?: string | number;
-    purchaseId?: string | number;
+    addCashId?: number;
+    purchaseId?: number;
   }) => {
     if (!isAdmin) return;
+
     if (addCashId && purchaseId) {
       setSelectedIds({ addCashId, purchaseId });
+      setDialogMode("delete");
       setDialogOpen(true);
       return;
     }
+
     if (addCashId) {
-      deleteAddCashByDay({ day: +addCashId, month, year });
+      deleteAddCashByDay({ day: addCashId, month, year });
     }
 
-    // только purchases
     if (purchaseId) {
-      deletePurchaseByDay({ day: +purchaseId, month, year });
+      deletePurchaseByDay({ day: purchaseId, month, year });
     }
   };
 
   return (
     <>
-      {/* Верхняя панель */}
-      <div className="flex justify-between items-center py-6">
-        <Label className="px-4 text-blue-700">
+      <div className="flex justify-between items-center pt-4 pb-4">
+        <Label className="px-4">
           <span className="font-bold">сальдо:</span> {initialBalance}
           <PenBox
-            className="inline ml-3 w-4 h-4 cursor-pointer text-blue-800"
+            className="inline ml-3 w-4 h-4 cursor-pointer "
             onClick={() =>
               router.push(`/home/balance?month=${month}&year=${year}`)
             }
           />
         </Label>
+        <Label>{MONTHS_STRING[month - 1]}</Label>
 
-        <Label className="px-4 text-blue-700">
+        <Label className="px-4">
           <span className="font-bold">остаток:</span>{" "}
           {initialBalance + totalIncome - totalExpense}
         </Label>
       </div>
+      <Separator className="bg-black h-0.5 mb-8" />
 
-      {/* Таблица */}
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-20 text-xs"></TableHead>
-            <TableHead className="text-center">поступление</TableHead>
-            <TableHead className="text-center">расход</TableHead>
-            <TableHead className="w-10"></TableHead>
+            <TableHead className="w-8"></TableHead>
+            <TableHead className="text-center text-blue-700 w-20 border-r">
+              приход
+            </TableHead>
+            <TableHead className="text-center text-red-700 w-20">
+              закупка
+            </TableHead>
+            <TableHead className="w-20"></TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {days.map((row: any) => {
-            const purchaseByDay = dataPurchases.days.find(
-              (d) => d.day === row.day
-            );
-            const addCashByDay = dataAddCash.days.find(
-              (d) => d.day === row.day
-            );
+          {days.map((row) => {
+            const purchaseByDay = dataPurchases?.days?.[row.day];
+            const addCashByDay = dataAddCash?.days?.[row.day];
 
             if (!purchaseByDay && !addCashByDay) return null;
 
@@ -177,35 +182,36 @@ export default function PageArchive({
               : 0;
 
             return (
-              <TableRow key={row.day}>
-                <TableCell className="text-xs font-medium p-1">
+              <TableRow key={row.day} className="h-12">
+                <TableCell className="text-md font-medium">
                   {row.day} - {row.weekday}
                 </TableCell>
 
-                <TableCell className="text-xs text-blue-700 font-bold text-center p-1">
+                <TableCell className="text-md text-blue-700 font-bold text-center border-r">
                   {income || ""}
                 </TableCell>
 
-                <TableCell className="text-xs text-red-700 font-bold text-center p-1">
+                <TableCell className="text-md text-red-700 font-bold text-center">
                   {expense || ""}
                 </TableCell>
 
-                <TableCell className="text-center flex gap-6">
+                <TableCell className="text-center flex justify-between items-center h-12 px-4">
                   <PenBox
-                    className="w-4 h-4 cursor-pointer text-blue-800"
+                    className="w-5 h-5 cursor-pointer text-blue-800"
                     onClick={() =>
                       handleEditClick({
-                        addCashId: addCashByDay?.day,
-                        purchaseId: purchaseByDay?.day,
+                        addCashId: addCashByDay ? row.day : undefined,
+                        purchaseId: purchaseByDay ? row.day : undefined,
                       })
                     }
                   />
+
                   <Trash2Icon
-                    className="w-4 h-4 cursor-pointer text-red-800"
+                    className="w-5 h-5 cursor-pointer text-red-800"
                     onClick={() =>
-                      deleteDayPurchase({
-                        addCashId: addCashByDay?.day,
-                        purchaseId: purchaseByDay?.day,
+                      handleDeleteClick({
+                        addCashId: addCashByDay ? row.day : undefined,
+                        purchaseId: purchaseByDay ? row.day : undefined,
                       })
                     }
                   />
@@ -214,15 +220,14 @@ export default function PageArchive({
             );
           })}
 
-          {/* Итоговая строка */}
-          <TableRow className="h-12">
+          <TableRow className="h-14">
             <TableCell></TableCell>
 
-            <TableCell className="text-xs text-blue-700 font-bold text-center">
+            <TableCell className="text-md text-blue-700 font-bold text-center">
               {totalIncome}
             </TableCell>
 
-            <TableCell className="text-xs text-red-700 font-bold text-center">
+            <TableCell className="text-md text-red-700 font-bold text-center">
               {totalExpense}
             </TableCell>
 
@@ -231,37 +236,60 @@ export default function PageArchive({
         </TableBody>
       </Table>
 
-      {/* Диалог выбора */}
       <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Что вы хотите открыть?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {dialogMode === "edit"
+                ? "Что вы хотите открыть?"
+                : "Что вы хотите удалить?"}
+            </AlertDialogTitle>
           </AlertDialogHeader>
 
           <AlertDialogFooter>
             <AlertDialogCancel>Отмена</AlertDialogCancel>
 
-            <AlertDialogAction
-              onClick={() => {
-                if (!selectedIds?.purchaseId) return;
-                router.push(
-                  `/home/purchases/${selectedIds.purchaseId}?month=${month}&year=${year}`
-                );
-              }}
-            >
-              Расход
-            </AlertDialogAction>
+            {selectedIds?.purchaseId && (
+              <AlertDialogAction
+                onClick={() => {
+                  if (dialogMode === "edit") {
+                    router.push(
+                      `/home/purchases/${selectedIds.purchaseId}?month=${month}&year=${year}`
+                    );
+                  } else {
+                    deletePurchaseByDay({
+                      day: selectedIds.purchaseId!,
+                      month,
+                      year,
+                    });
+                  }
+                  setDialogOpen(false);
+                }}
+              >
+                Расход
+              </AlertDialogAction>
+            )}
 
-            <AlertDialogAction
-              onClick={() => {
-                if (!selectedIds?.addCashId) return;
-                router.push(
-                  `/home/add-cash/${selectedIds.addCashId}?month=${month}&year=${year}`
-                );
-              }}
-            >
-              Поступление
-            </AlertDialogAction>
+            {selectedIds?.addCashId && (
+              <AlertDialogAction
+                onClick={() => {
+                  if (dialogMode === "edit") {
+                    router.push(
+                      `/home/add-cash/${selectedIds.addCashId}?month=${month}&year=${year}`
+                    );
+                  } else {
+                    deleteAddCashByDay({
+                      day: selectedIds.addCashId!,
+                      month,
+                      year,
+                    });
+                  }
+                  setDialogOpen(false);
+                }}
+              >
+                Поступление
+              </AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

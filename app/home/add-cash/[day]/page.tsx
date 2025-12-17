@@ -14,11 +14,12 @@ export default async function Page({
   const { day } = await params;
   const { month, year } = await searchParams;
   if (!month || !year || !day) return null;
+
   const docId = `${year}-${month}`;
-  const dataPurchases = await getAddCashByMonthYear(docId);
-  const dataByDay = (dataPurchases as AddCashTypeData)?.days.find(
-    (d: any) => d.day === +day
-  );
+  const dataPurchases = (await getAddCashByMonthYear(docId)) as AddCashTypeData;
+
+  const dataByDay = dataPurchases?.days?.[+day];
+
   return (
     <PageAddCash data={dataByDay} day={+day} month={+month} year={+year} />
   );

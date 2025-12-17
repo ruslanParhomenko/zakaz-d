@@ -11,7 +11,7 @@ const navItems = [
     href: "purchases",
   },
   {
-    title: "поступление",
+    title: "приход",
     href: "add-cash",
   },
 ];

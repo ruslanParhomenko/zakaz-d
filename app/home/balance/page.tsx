@@ -6,7 +6,6 @@ export default async function Page({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { month, year } = await searchParams;
-  console.log(month, year);
   if (!month || !year) return null;
   return <PageBalance month={+month} year={+year} />;
 }

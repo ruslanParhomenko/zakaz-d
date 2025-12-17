@@ -1,72 +1,62 @@
 "use server";
 
-import { PurchaseType } from "@/features/purchases/schema";
 import { db } from "@/lib/firebase";
 import { unstable_cache, updateTag } from "next/cache";
+import { FieldValue } from "firebase-admin/firestore";
 
 export type PurchasesTypeData = {
   id: string;
   year: number;
   month: number;
-  days: {
-    day: number;
-    purchase: string;
-    fuel: string;
-    cleaning: string;
-    payment: string;
-  }[];
+  days: Record<
+    number,
+    {
+      purchase: string;
+      fuel: string;
+      cleaning: string;
+      payment: string;
+    }
+  >;
 };
 
-// create day purchase
-export async function createPurchaseByDay(formData: PurchaseType) {
-  const day = formData.date.getDate();
-  const month = formData.date.getMonth() + 1;
-  const year = formData.date.getFullYear();
-
+// CREATE / UPDATE DAY
+export async function createPurchaseByDay({
+  day,
+  month,
+  year,
+  purchase,
+  fuel,
+  cleaning,
+  payment,
+}: {
+  day: number;
+  month: number;
+  year: number;
+  purchase: string;
+  fuel: string;
+  cleaning: string;
+  payment: string;
+}) {
   const docId = `${year}-${month}`;
   const docRef = db.collection("purchases").doc(docId);
 
-  const newDayData = {
-    day,
-    purchase: formData.purchase,
-    fuel: formData.fuel,
-    cleaning: formData.cleaning,
-    payment: formData.payment,
-  };
-
-  await db.runTransaction(async (tx) => {
-    const snap = await tx.get(docRef);
-
-    if (!snap.exists) {
-      tx.set(docRef, {
-        year,
-        month,
-        days: [newDayData],
-      });
-      return;
-    }
-
-    const data = snap.data();
-    const days = data?.days ?? [];
-
-    const index = days.findIndex((d: any) => d.day === day);
-    if (index === -1) {
-      days.push(newDayData);
-    } else {
-      days[index] = newDayData;
-    }
-    tx.update(docRef, { days });
-  });
+  await docRef.set(
+    {
+      year,
+      month,
+      days: {
+        [day]: { purchase, fuel, cleaning, payment },
+      },
+    },
+    { merge: true }
+  );
 
   updateTag("purchases");
 
   return docId;
 }
 
-// update day
-
-// delete day
-
+// DELETE DAY
 export async function deletePurchaseByDay({
   day,
   month,
@@ -79,23 +69,8 @@ export async function deletePurchaseByDay({
   const docId = `${year}-${month}`;
   const docRef = db.collection("purchases").doc(docId);
 
-  await db.runTransaction(async (tx) => {
-    const snap = await tx.get(docRef);
-
-    if (!snap.exists) {
-      throw new Error("Документ за месяц не найден");
-    }
-
-    const docData = snap.data();
-    const days = docData?.days ?? [];
-
-    const filteredDays = days.filter((d: any) => d.day !== day);
-
-    if (filteredDays.length === days.length) {
-      throw new Error(`Запись за ${day} число не найдена`);
-    }
-
-    tx.update(docRef, { days: filteredDays });
+  await docRef.update({
+    [`days.${day}`]: FieldValue.delete(),
   });
 
   updateTag("purchases");
@@ -103,9 +78,9 @@ export async function deletePurchaseByDay({
   return docId;
 }
 
+// GET
 export const _getPurchasesByMonthYear = async (docId: string) => {
   const snapshot = await db.collection("purchases").doc(docId).get();
-  console.log(snapshot);
 
   if (!snapshot.exists) {
     return null;
@@ -114,12 +89,12 @@ export const _getPurchasesByMonthYear = async (docId: string) => {
   return {
     id: snapshot.id,
     ...snapshot.data(),
-  };
+  } as PurchasesTypeData;
 };
 
 export const getPurchasesByMonthYear = unstable_cache(
   _getPurchasesByMonthYear,
-  ["purchases"],
+  ["purchases-by-month"],
   {
     revalidate: false,
     tags: ["purchases"],

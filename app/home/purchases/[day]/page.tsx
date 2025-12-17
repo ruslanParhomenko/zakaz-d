@@ -14,11 +14,14 @@ export default async function Page({
   const { day } = await params;
   const { month, year } = await searchParams;
   if (!month || !year || !day) return null;
+
   const docId = `${year}-${month}`;
-  const dataPurchases = await getPurchasesByMonthYear(docId);
-  const dataByDay = (dataPurchases as PurchasesTypeData)?.days.find(
-    (d: any) => d.day === +day
-  );
+  const dataPurchases = (await getPurchasesByMonthYear(
+    docId
+  )) as PurchasesTypeData;
+
+  const dataByDay = dataPurchases?.days?.[+day];
+
   return (
     <PagePurchases data={dataByDay} day={+day} month={+month} year={+year} />
   );

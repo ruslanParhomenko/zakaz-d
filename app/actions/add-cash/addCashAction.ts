@@ -1,65 +1,49 @@
 "use server";
 
-import { AddCashType } from "@/features/add-cash/schema";
 import { db } from "@/lib/firebase";
 import { unstable_cache, updateTag } from "next/cache";
+import { FieldValue } from "firebase-admin/firestore";
 
 export type AddCashTypeData = {
   initialBalance: string;
   id: string;
   year: number;
   month: number;
-  days: {
-    day: number;
-    addCash: string;
-  }[];
+  days: Record<number, { addCash: string }>;
 };
 
-// create day
-export async function createAddCashByDay(formData: AddCashType) {
-  const day = formData.date.getDate();
-  const month = formData.date.getMonth() + 1;
-  const year = formData.date.getFullYear();
-
+// CREATE / UPDATE DAY
+export async function createAddCashByDay({
+  day,
+  month,
+  year,
+  addCash,
+}: {
+  day: number;
+  month: number;
+  year: number;
+  addCash: string;
+}) {
   const docId = `${year}-${month}`;
   const docRef = db.collection("addCash").doc(docId);
 
-  const newDayData = {
-    day,
-    addCash: formData.addCash,
-  };
-
-  await db.runTransaction(async (tx) => {
-    const snap = await tx.get(docRef);
-
-    if (!snap.exists) {
-      tx.set(docRef, {
-        year,
-        month,
-        days: [newDayData],
-      });
-      return;
-    }
-
-    const data = snap.data();
-    const days = data?.days ?? [];
-
-    const index = days.findIndex((d: any) => d.day === day);
-
-    if (index === -1) {
-      days.push(newDayData);
-    } else {
-      days[index] = newDayData;
-    }
-
-    tx.update(docRef, { days });
-  });
+  await docRef.set(
+    {
+      year,
+      month,
+      days: {
+        [day]: { addCash },
+      },
+    },
+    { merge: true }
+  );
 
   updateTag("addCash");
 
   return docId;
 }
-// delete day
+
+// DELETE DAY
 export async function deleteAddCashByDay({
   day,
   month,
@@ -72,31 +56,16 @@ export async function deleteAddCashByDay({
   const docId = `${year}-${month}`;
   const docRef = db.collection("addCash").doc(docId);
 
-  await db.runTransaction(async (tx) => {
-    const snap = await tx.get(docRef);
-
-    if (!snap.exists) {
-      throw new Error("Документ за месяц не найден");
-    }
-
-    const docData = snap.data();
-    const days = docData?.days ?? [];
-
-    const filteredDays = days.filter((d: any) => d.day !== day);
-
-    if (filteredDays.length === days.length) {
-      throw new Error(`Запись за ${day} число не найдена`);
-    }
-
-    tx.update(docRef, { days: filteredDays });
+  await docRef.update({
+    [`days.${day}`]: FieldValue.delete(),
   });
 
-  updateTag("purchases");
+  updateTag("addCash");
 
   return docId;
 }
 
-// get day
+// GET
 export const _getAddCashByMonthYear = async (docId: string) => {
   const snapshot = await db.collection("addCash").doc(docId).get();
 
@@ -107,12 +76,12 @@ export const _getAddCashByMonthYear = async (docId: string) => {
   return {
     id: snapshot.id,
     ...snapshot.data(),
-  };
+  } as AddCashTypeData;
 };
 
 export const getAddCashByMonthYear = unstable_cache(
   _getAddCashByMonthYear,
-  ["addCash"],
+  ["addCash-by-month"],
   {
     revalidate: false,
     tags: ["addCash"],

@@ -34,8 +34,8 @@ export default function PagePurchases({
 }: {
   data?: PurchasesTypeData["days"][number];
   day?: number;
-  month?: number;
-  year?: number;
+  month: number;
+  year: number;
 }) {
   const router = useRouter();
 
@@ -56,9 +56,17 @@ export default function PagePurchases({
 
   const onSubmit: SubmitHandler<PurchaseType> = async (data) => {
     try {
-      await createPurchaseByDay(data);
+      await createPurchaseByDay({
+        day: data.date.getDate(),
+        month: data.date.getMonth() + 1,
+        year: data.date.getFullYear(),
+        purchase: data.purchase,
+        fuel: data.fuel,
+        cleaning: data.cleaning,
+        payment: data.payment,
+      });
       toast.success("Данные сохранены");
-      router.back();
+      router.push(`/home/archive?month=${month}&year=${year}`);
     } catch (error) {
       toast.error("Не удалось сохранить данные. Повторите попытку.");
     }
@@ -79,12 +87,12 @@ export default function PagePurchases({
       cleaning: data.cleaning,
       payment: data.payment,
     });
-  }, [data, day, month, year]);
+  }, [data]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="w-full md:w-1/2  px-4 pt-12 flex flex-col md:mx-auto h-[85vh]">
+        <div className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[80vh]">
           <Label>
             <span className="mr-4">всего:</span>
             {total}

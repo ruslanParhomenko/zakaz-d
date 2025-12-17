@@ -25,8 +25,8 @@ export default function PageAddCash({
 }: {
   data?: AddCashTypeData["days"][number];
   day?: number;
-  month?: number;
-  year?: number;
+  month: number;
+  year: number;
 }) {
   const router = useRouter();
 
@@ -43,9 +43,14 @@ export default function PageAddCash({
 
   const onSubmit: SubmitHandler<AddCashType> = async (data) => {
     try {
-      await createAddCashByDay(data);
+      await createAddCashByDay({
+        day: data.date.getDate(),
+        month: data.date.getMonth() + 1,
+        year: data.date.getFullYear(),
+        addCash: data.addCash,
+      });
       toast.success("Данные сохранены");
-      router.back();
+      router.push(`/home/archive?month=${month}&year=${year}`);
     } catch (error) {
       toast.error("Не удалось сохранить данные. Повторите попытку.");
     }
@@ -67,13 +72,17 @@ export default function PageAddCash({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="w-full md:w-1/2  px-4 pt-12 flex flex-col md:mx-auto h-[85vh]">
+        <div className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[80vh]">
           <div className="flex-1 flex items-center">
             <FieldSet className="w-full">
               <FieldGroup>
                 <Field orientation="horizontal" className={classNameField}>
                   <FieldLabel className={classNameDate}>дата</FieldLabel>
-                  <DatePickerInput fieldName="date" className={classNameDate} />
+                  <DatePickerInput
+                    fieldName="date"
+                    className={classNameDate}
+                    disabled={!!data}
+                  />
                   <RefreshCcw
                     className="w-4 h-4 text-blue-700"
                     onClick={() => resetField("date")}
