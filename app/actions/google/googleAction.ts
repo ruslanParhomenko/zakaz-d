@@ -15,8 +15,12 @@ const auth = new google.auth.GoogleAuth({
 
 const drive = google.drive({ version: "v3", auth });
 
-// Получаем список файлов и папок в указанной папке
-export async function listFolderContents(folderId: string) {
+// Простой кеш на папку
+const folderCache: Record<number, { timestamp: number; data: any }> = {};
+
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 часа
+
+async function listFolderContents(folderId: string) {
   const res = await drive.files.list({
     q: `'${folderId}' in parents and trashed=false`,
     fields: "files(id, name, mimeType, webViewLink, webContentLink)",
@@ -24,23 +28,37 @@ export async function listFolderContents(folderId: string) {
   return res.data.files || [];
 }
 
-// Получаем содержимое всех подпапок с номерами от 1 до 12
-export async function listFilesInSubfolders() {
-  const folders = await listFolderContents(TARGET_FOLDER_ID);
+async function getFolderIdByNumber(folderNumber: number) {
+  const res = await drive.files.list({
+    q: `'${TARGET_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+    fields: "files(id, name)",
+  });
 
-  // Фильтруем только папки с цифрами 1-12
-  const numberedFolders = folders.filter(
-    (f) =>
-      f.mimeType === "application/vnd.google-apps.folder" &&
-      /^[1-9]$|^1[0-2]$/.test(f.name as string)
+  const folder = res.data.files?.find(
+    (f) => f.name === folderNumber.toString()
   );
 
-  const allFiles: { folderName: string; files: any[] }[] = [];
+  return folder?.id || null;
+}
 
-  for (const folder of numberedFolders) {
-    const files = await listFolderContents(folder.id as string);
-    allFiles.push({ folderName: folder.name as string, files });
+export async function listFilesByFolderNumber(folderNumber: number) {
+  const now = Date.now();
+
+  // Проверяем кеш
+  if (
+    folderCache[folderNumber] &&
+    now - folderCache[folderNumber].timestamp < CACHE_TTL
+  ) {
+    return folderCache[folderNumber].data;
   }
 
-  return allFiles;
+  const folderId = await getFolderIdByNumber(folderNumber);
+  if (!folderId) return [];
+
+  const files = await listFolderContents(folderId);
+
+  // Сохраняем в кеш
+  folderCache[folderNumber] = { timestamp: now, data: files };
+
+  return files;
 }
