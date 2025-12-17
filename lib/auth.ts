@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account, profile }) {
       if (account && profile) {
-        const users = ["parhomenkogm@gmail.com"];
+        const users = ["parhomenkogm@gmail.com", "termokud@gmail.com"];
 
         const dbUser = users.find((u) => u === profile.email);
 
