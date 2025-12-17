@@ -1,11 +1,9 @@
-import Image from "next/image";
-
 export default function PageFoto({ files }: { files: any[] }) {
   if (!files) return <div>Загрузка...</div>;
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {files.map((file) => (
           <a
             key={file.id}
@@ -15,13 +13,9 @@ export default function PageFoto({ files }: { files: any[] }) {
             className="border p-2 rounded hover:shadow"
           >
             {file.mimeType.startsWith("image/") ? (
-              <Image
-                src={file.webContentLink as string}
-                width={200}
-                height={200}
-                alt={file.name}
-                className="w-full h-30 object-cover"
-              />
+              <button type="button" className="w-20 h-10">
+                {file.name}
+              </button>
             ) : (
               <div className="text-center">{file.name}</div>
             )}
