@@ -7,6 +7,7 @@ export const schemaPurchase = yup.object().shape({
   fuel: yup.string().default(""),
   cleaning: yup.string().default(""),
   payment: yup.string().default(""),
+  photos: yup.mixed(),
 });
 
 export type PurchaseType = yup.InferType<typeof schemaPurchase>;

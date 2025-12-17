@@ -3,6 +3,10 @@ import NavMenuHeader from "@/features/nav-tabs/NavMenu";
 
 const navItems = [
   {
+    title: "фото",
+    href: "foto",
+  },
+  {
     title: "архив",
     href: "archive",
   },

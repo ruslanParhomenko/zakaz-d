@@ -69,14 +69,14 @@ function NumericInput({
             </PopoverTrigger>
             <PopoverContent
               className={cn(
-                "w-50 p-2 grid grid-cols-3 gap-2 border-none bg-background"
+                "w-65 p-3 grid grid-cols-3 gap-3 border-none bg-background"
               )}
             >
               {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
                 <Button
                   key={num}
                   variant="outline"
-                  className="h-10 text-xl bg-background"
+                  className="h-12 text-xl bg-background"
                   onClick={() => onChange((value ?? "") + num)}
                 >
                   {num}
@@ -84,7 +84,7 @@ function NumericInput({
               ))}
               <Button
                 variant="outline"
-                className="h-10 text-xl bg-background"
+                className="h-12 text-xl bg-background"
                 onClick={() => {
                   if (!(value ?? "").includes(".")) {
                     onChange("-" + (value ?? ""));
@@ -96,14 +96,14 @@ function NumericInput({
 
               <Button
                 variant="outline"
-                className="h-10 text-xl bg-background"
+                className="h-12 text-xl bg-background"
                 onClick={() => onChange((value ?? "") + "0")}
               >
                 0
               </Button>
               <Button
                 variant="outline"
-                className="h-10 text-xl bg-background"
+                className="h-12 text-xl bg-background"
                 onClick={() => {
                   if (!(value ?? "").includes(".")) {
                     onChange((value ?? "") + ".");
@@ -114,7 +114,7 @@ function NumericInput({
               </Button>
               <Button
                 variant="outline"
-                className="h-10 text-xl text-rd bg-background"
+                className="h-12 text-xl text-rd bg-background"
                 onClick={() => onChange((value ?? "").slice(0, -1))}
               >
                 x
@@ -122,7 +122,7 @@ function NumericInput({
 
               <Button
                 variant="outline"
-                className="h-10 text-xl col-span-2  bg-background"
+                className="h-12 text-xl col-span-2  bg-background"
                 onClick={() => setOpen(false)}
               >
                 ok

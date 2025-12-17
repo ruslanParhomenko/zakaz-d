@@ -10,7 +10,9 @@ if (!admin.apps.length) {
         "\n"
       ).trim(),
     }),
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET, // 👈 важно
   });
 }
 
 export const db = admin.firestore();
+export const bucket = admin.storage().bucket(); // 👈 экспорт bucket

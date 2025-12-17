@@ -65,7 +65,7 @@ export default function NavMenuHeader({
   };
 
   return (
-    <div className="py-4 sticky top-0 z-10 flex justify-center md:justify-end gap-2 md:px-4 md:gap-10">
+    <div className="py-6 sticky top-0 z-10 flex justify-center md:justify-end gap-1 md:px-4 md:gap-10">
       <SelectByMonthYear
         month={month}
         year={year}
