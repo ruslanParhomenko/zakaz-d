@@ -75,7 +75,7 @@ export const _getAddUrlsByMonthYear = async (docId: string) => {
   return {
     id: snapshot.id,
     ...snapshot.data(),
-  } as AddCashTypeData;
+  } as UrlsTypeData;
 };
 
 export const getAddUrlsByMonthYear = unstable_cache(
