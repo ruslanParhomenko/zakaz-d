@@ -22,7 +22,7 @@ export default function SelectByMonthYear({
   isLoading?: boolean;
 }) {
   const classNameSelect =
-    "w-18  h-12! bg-black font-bold  rounded-md text-white text-sm  [&>svg]:hidden justify-center";
+    "w-18  h-10! bg-black font-bold  rounded-md text-white text-sm  [&>svg]:hidden justify-center";
   return (
     <div className="flex justify-center items-center md:gap-4 gap-1">
       <Select

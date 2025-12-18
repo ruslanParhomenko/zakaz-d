@@ -175,16 +175,16 @@ export default function BodyTable({
 
             return (
               <TableRow key={row.day}>
-                <TableCell className="w-1/4 text-left">
+                <TableCell className="w-1/4 text-left py-1">
                   {row.day} - {row.weekday}
                 </TableCell>
-                <TableCell className="w-1/4 text-center text-blue-700 font-bold border-r">
+                <TableCell className="w-1/4 text-center text-blue-700 font-bold border-r py-1">
                   {income || ""}
                 </TableCell>
-                <TableCell className="w-1/4 text-center text-red-700 font-bold">
+                <TableCell className="w-1/4 text-center text-red-700 font-bold py-1">
                   {expense || ""}
                 </TableCell>
-                <TableCell className="w-1/4 text-center">
+                <TableCell className="w-1/4 text-center py-1">
                   <div className="w-full flex flex-row justify-between items-center h-full px-2">
                     <PenBox
                       className="w-5 h-4 cursor-pointer text-blue-800"
@@ -214,10 +214,10 @@ export default function BodyTable({
         <TableFooter>
           <TableRow>
             <TableCell className="w-1/4"></TableCell>
-            <TableCell className="w-1/4 text-center text-blue-700 font-bold">
+            <TableCell className="w-1/4 text-center text-blue-700 font-bold p-1">
               {totalIncome}
             </TableCell>
-            <TableCell className="w-1/4 text-center text-red-700 font-bold">
+            <TableCell className="w-1/4 text-center text-red-700 font-bold p-1">
               {totalExpense}
             </TableCell>
             <TableCell className="w-1/4"></TableCell>

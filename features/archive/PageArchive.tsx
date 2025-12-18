@@ -29,7 +29,7 @@ export default function PageArchive({
   );
 
   return (
-    <div className="flex flex-col h-[80vh] justify-start">
+    <div className="flex flex-col h-[75vh] justify-start">
       <HeaderInfoArchive
         month={month}
         year={year}
