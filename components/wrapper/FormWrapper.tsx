@@ -22,7 +22,7 @@ export default function FormWrapperWithDate({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit as SubmitHandler<any>)}
-        className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[80vh]"
+        className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[75vh]"
       >
         <div className="flex w-full items-center justify-end px-4 py-4">
           <DatePickerInput

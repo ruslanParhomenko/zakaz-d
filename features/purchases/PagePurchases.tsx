@@ -42,14 +42,14 @@ export default function PagePurchases({
   const payment = useWatch({ control: form.control, name: "payment" });
   const total = +purchase + +fuel + +cleaning + +payment;
 
-  const MAX_SIZE = 200 * 1024;
+  const MAX_SIZE = 5000 * 1024;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
     const invalid = files.filter((f) => f.size > MAX_SIZE);
     if (invalid.length) {
-      toast.error("Фото должно быть не больше 200 KB");
+      toast.error("Фото должно быть не больше 5мб");
       return;
     }
 
