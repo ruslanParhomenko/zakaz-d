@@ -22,9 +22,7 @@ export default function HeaderInfoArchive({
         <span className="font-bold">сальдо:</span> {initialBalance}
         <PenBox
           className="inline ml-3 w-4 h-4 cursor-pointer "
-          onClick={() =>
-            router.push(`/home/balance?month=${month}&year=${year}`)
-          }
+          onClick={() => router.push(`/balance?month=${month}&year=${year}`)}
         />
       </Label>
       <Label>{MONTHS_STRING[month - 1]}</Label>

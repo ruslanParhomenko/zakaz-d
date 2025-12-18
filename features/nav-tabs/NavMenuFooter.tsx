@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
-export default function NavMenuFooter({ mainRoute }: { mainRoute: string }) {
+export default function NavMenuFooter() {
   const router = useRouter();
   const params = useSearchParams();
   const month = Number(params.get("month"));
@@ -19,7 +19,7 @@ export default function NavMenuFooter({ mainRoute }: { mainRoute: string }) {
       year: String(year),
     });
     startTransition(() => {
-      router.push(`/${mainRoute}/purchases?${params.toString()}`);
+      router.push(`/purchases?${params.toString()}`);
     });
   };
 
@@ -29,7 +29,7 @@ export default function NavMenuFooter({ mainRoute }: { mainRoute: string }) {
       year: String(year),
     });
     startTransition(() => {
-      router.push(`/${mainRoute}/add-cash?${params.toString()}`);
+      router.push(`/add-cash?${params.toString()}`);
     });
   };
 

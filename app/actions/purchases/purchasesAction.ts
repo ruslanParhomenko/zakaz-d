@@ -28,7 +28,6 @@ export async function createPurchaseByDay({
   fuel,
   cleaning,
   payment,
-  photoUrls = [],
 }: {
   day: number;
   month: number;
@@ -37,7 +36,6 @@ export async function createPurchaseByDay({
   fuel: string;
   cleaning: string;
   payment: string;
-  photoUrls?: string[];
 }) {
   const docId = `${year}-${month}`;
   const docRef = db.collection("purchases").doc(docId);
@@ -47,7 +45,7 @@ export async function createPurchaseByDay({
       year,
       month,
       days: {
-        [day]: { purchase, fuel, cleaning, payment, photoUrls },
+        [day]: { purchase, fuel, cleaning, payment },
       },
     },
     { merge: true }

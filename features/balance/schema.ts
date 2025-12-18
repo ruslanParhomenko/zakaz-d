@@ -1,8 +1,7 @@
 import * as yup from "yup";
 
 export const schemaBalance = yup.object().shape({
-  month: yup.number().required(),
-  year: yup.number().required(),
+  date: yup.date().required().default(new Date()),
 
   initialBalance: yup.string().required().default(""),
 });

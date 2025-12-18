@@ -22,8 +22,11 @@ export default function PageArchive({
   year: number;
   isAdmin: boolean;
 }) {
-  const { initialBalance, totalIncome, totalExpense, remainingBalance } =
-    calculateBalance(dataPurchases, dataAddCash, dataBalance);
+  const { initialBalance, remainingBalance } = calculateBalance(
+    dataPurchases,
+    dataAddCash,
+    dataBalance
+  );
 
   return (
     <div className="flex flex-col h-[80vh] justify-start">
@@ -42,7 +45,7 @@ export default function PageArchive({
         isAdmin={isAdmin}
       />
 
-      <NavMenuFooter mainRoute="home" />
+      <NavMenuFooter />
     </div>
   );
 }

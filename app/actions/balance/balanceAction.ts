@@ -1,6 +1,4 @@
 "use server";
-
-import { BalanceType } from "@/features/balance/schema";
 import { db } from "@/lib/firebase";
 import { unstable_cache, updateTag } from "next/cache";
 
@@ -11,10 +9,15 @@ export type BalanceTypeData = {
   month: number;
 };
 
-export async function createBalanceByMonth(formData: BalanceType) {
-  const month = formData.month;
-  const year = formData.year;
-
+export async function createBalanceByMonth({
+  month,
+  year,
+  initialBalance,
+}: {
+  month: number;
+  year: number;
+  initialBalance: string;
+}) {
   const docId = `${year}-${month}`;
   const docRef = db.collection("balance").doc(docId);
 
@@ -22,7 +25,7 @@ export async function createBalanceByMonth(formData: BalanceType) {
     {
       year,
       month,
-      initialBalance: formData.initialBalance,
+      initialBalance: initialBalance,
     },
     { merge: true }
   );

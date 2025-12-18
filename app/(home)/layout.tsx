@@ -17,7 +17,7 @@ export default function HomeLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <AuthGuard>
-      <NavMenuHeader navItems={navItems} mainRoute="home" />
+      <NavMenuHeader navItems={navItems} />
       {children}
     </AuthGuard>
   );

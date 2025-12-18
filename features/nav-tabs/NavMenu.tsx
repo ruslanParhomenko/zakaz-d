@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import SelectTabsByPatch from "./SelectTabsByPatch";
@@ -13,10 +13,8 @@ export type PageNavType = {
 
 export default function NavMenuHeader({
   navItems,
-  mainRoute,
 }: {
   navItems: PageNavType[];
-  mainRoute: string;
 }) {
   const router = useRouter();
 
@@ -25,47 +23,46 @@ export default function NavMenuHeader({
   const [patch, setPatch] = useState("archive");
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [year, setYear] = useState<string>(new Date().getFullYear().toString());
-  const pushUrl = ({
-    nextPatch = patch,
-    nextMonth = month,
-    nextYear = year,
-  }: {
-    nextPatch?: string;
-    nextMonth?: number;
-    nextYear?: string;
-  }) => {
-    const params = new URLSearchParams({
-      month: String(nextMonth),
-      year: String(nextYear),
-    });
+  // const pushUrl = ({
+  //   nextPatch = patch,
+  //   nextMonth = month,
+  //   nextYear = year,
+  // }: {
+  //   nextPatch?: string;
+  //   nextMonth?: number;
+  //   nextYear?: string;
+  // }) => {
+  //   const params = new URLSearchParams({
+  //     month: String(nextMonth),
+  //     year: String(nextYear),
+  //   });
+
+  //   startTransition(() => {
+  //     router.push(`/${nextPatch}?${params.toString()}`);
+  //   });
+  // };
+
+  useEffect(() => {
+    const url = `/${patch}?month=${month}&year=${year}`;
 
     startTransition(() => {
-      router.push(`/${mainRoute}/${nextPatch}?${params.toString()}`);
+      router.push(url);
     });
-  };
+  }, [patch, month, year]);
 
   return (
     <div className="py-6 sticky top-0 z-10 flex justify-center md:justify-end gap-4 md:px-4 md:gap-10">
       <SelectByMonthYear
         month={month}
         year={year}
-        setMonth={(m) => {
-          setMonth(m);
-          pushUrl({ nextMonth: m });
-        }}
-        setYear={(y) => {
-          setYear(y);
-          pushUrl({ nextYear: y });
-        }}
+        setMonth={setMonth}
+        setYear={setYear}
         isLoading={isPending}
       />
 
       <SelectTabsByPatch
         patch={patch}
-        setPatch={(p) => {
-          setPatch(p);
-          pushUrl({ nextPatch: p });
-        }}
+        setPatch={setPatch}
         isPending={isPending}
         navItems={navItems}
         className="w-26"

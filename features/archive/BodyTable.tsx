@@ -59,7 +59,7 @@ export default function BodyTable({
 
     if (dialogMode === "edit") {
       router.push(
-        `/home/purchases/${selectedIds.purchaseId}?month=${month}&year=${year}`
+        `/purchases/${selectedIds.purchaseId}?month=${month}&year=${year}`
       );
     } else {
       deletePurchaseByDay({
@@ -77,7 +77,7 @@ export default function BodyTable({
 
     if (dialogMode === "edit") {
       router.push(
-        `/home/add-cash/${selectedIds.addCashId}?month=${month}&year=${year}`
+        `/add-cash/${selectedIds.addCashId}?month=${month}&year=${year}`
       );
     } else {
       deleteAddCashByDay({
@@ -105,12 +105,12 @@ export default function BodyTable({
     }
 
     if (addCashId) {
-      router.push(`/home/add-cash/${addCashId}?month=${month}&year=${year}`);
+      router.push(`/add-cash/${addCashId}?month=${month}&year=${year}`);
       return;
     }
 
     if (purchaseId) {
-      router.push(`/home/purchases/${purchaseId}?month=${month}&year=${year}`);
+      router.push(`/purchases/${purchaseId}?month=${month}&year=${year}`);
     }
   };
 
