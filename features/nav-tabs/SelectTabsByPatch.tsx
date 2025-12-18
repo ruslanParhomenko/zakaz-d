@@ -8,11 +8,13 @@ export default function SelectTabsByPatch({
   setPatch,
   isPending,
   navItems,
+  className,
 }: {
   patch: string;
   setPatch: (value: string) => void;
   isPending: boolean;
   navItems: PageNavType[];
+  className?: string;
 }) {
   return (
     <Tabs value={patch} onValueChange={(value) => setPatch(value)}>
@@ -23,8 +25,9 @@ export default function SelectTabsByPatch({
             value={page.href}
             disabled={isPending}
             className={cn(
-              "w-16 text-white font-bold cursor-pointer p-0",
-              isPending && "opacity-50"
+              " text-white font-bold cursor-pointer p-0",
+              isPending && "opacity-50",
+              className
             )}
           >
             <span className="truncate block w-full text-sm md:text-md text-bl">

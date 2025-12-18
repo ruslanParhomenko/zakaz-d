@@ -26,7 +26,6 @@ export default async function Page({
   if (!month || !year) return null;
   const docId = `${year}-${month}`;
 
-  // Параллельная загрузка всех данных
   const [dataPurchases, dataAddCash, dataBalance] = await Promise.all([
     getPurchasesByMonthYear(docId),
     getAddCashByMonthYear(docId),

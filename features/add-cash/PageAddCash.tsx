@@ -110,15 +110,14 @@ export default function PageAddCash({
           </div>
 
           <div className="mt-0 py-2 flex items-center justify-end gap-6">
-            {data && (
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => router.back()}
-              >
-                Выйти
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => router.back()}
+            >
+              Выйти
+            </Button>
+
             <Button type="submit" disabled={form.formState.isSubmitting}>
               Сохранить
             </Button>

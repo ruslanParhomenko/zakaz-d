@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-// Импортируем функцию загрузки
+import { Input } from "@/components/ui/input";
 
 export default function PagePurchases({
   data,
@@ -64,12 +64,6 @@ export default function PagePurchases({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    // Ограничение на количество файлов (например, 10)
-    if (files.length + selectedFiles.length > 10) {
-      toast.error("Максимум 10 файлов");
-      return;
-    }
-
     // Ограничение на размер файла (например, 5MB)
     const oversizedFiles = files.filter((file) => file.size > 5 * 1024 * 1024);
     if (oversizedFiles.length > 0) {
@@ -79,7 +73,6 @@ export default function PagePurchases({
 
     setSelectedFiles((prev) => [...prev, ...files]);
 
-    // Создание preview для изображений
     files.forEach((file) => {
       if (file.type.startsWith("image/")) {
         const reader = new FileReader();
@@ -88,7 +81,6 @@ export default function PagePurchases({
         };
         reader.readAsDataURL(file);
       } else {
-        // Для не-изображений показываем иконку
         setFilePreviews((prev) => [...prev, ""]);
       }
     });
@@ -143,7 +135,6 @@ export default function PagePurchases({
       //   toast.success(`Загружено ${photoUrls.length} фото`);
       // }
 
-      // Сохраняем данные покупки с ссылками на фото
       await createPurchaseByDay({
         day: formData.date.getDate(),
         month: formData.date.getMonth() + 1,
@@ -152,13 +143,12 @@ export default function PagePurchases({
         fuel: formData.fuel,
         cleaning: formData.cleaning,
         payment: formData.payment,
-        photoUrls: photoUrls, // Добавляем ссылки на фото
+        photoUrls: photoUrls,
       });
 
       toast.success("Данные сохранены");
       router.push(`/home/archive?month=${month}&year=${year}`);
     } catch (error) {
-      console.error("Submit error:", error);
       toast.error("Не удалось сохранить данные. Повторите попытку.");
     } finally {
       setUploading(false);
@@ -166,9 +156,9 @@ export default function PagePurchases({
   };
 
   const classNameDate = "text-blue-600 text-md";
-  const classNameField = "grid grid-cols-[45%_40%_10%]";
+  const classNameField = "grid grid-cols-[40%_40%_10%]";
   const classNameIcon = "text-red-600 w-4 h-4";
-  const classNameInput = "text-md w-30";
+  const classNameInput = "text-md w-full";
 
   useEffect(() => {
     if (!data || !day || !month || !year) return;
@@ -269,52 +259,42 @@ export default function PagePurchases({
                     />
                   )}
                 </Field>
-
-                {/* Секция загрузки фото */}
                 <FieldSeparator />
 
-                <Field orientation="vertical" className="mt-4">
-                  <FieldLabel className="text-md mb-2 flex items-center gap-2">
+                <Field orientation="horizontal" className={classNameField}>
+                  <FieldLabel
+                    className="text-base text-blue-700 flex items-center gap-6"
+                    htmlFor="picture"
+                  >
                     <Upload className="w-4 h-4" />
-                    Фото чеков и документов
+                    фото чеков
                   </FieldLabel>
+                  <Input
+                    id="picture"
+                    type="file"
+                    hidden
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                </Field>
 
-                  {/* Input для загрузки файлов */}
-                  <div className="mb-4">
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*,.pdf,.doc,.docx"
-                      onChange={handleFileChange}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                    <p className="mt-1 text-xs text-gray-500">
-                      Максимум 10 файлов, не более 5MB каждый
-                    </p>
-                  </div>
-
-                  {/* Preview выбранных файлов */}
-                  {selectedFiles.length > 0 && (
-                    <div className="mt-4">
-                      <Label className="mb-2 block">
-                        Выбрано файлов: {selectedFiles.length}
-                      </Label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {selectedFiles.map((file, index) => (
-                          <div
-                            key={index}
-                            className="relative border rounded-lg p-2 group"
+                {selectedFiles.length > 0 && (
+                  <div>
+                    <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
+                      {selectedFiles.map((file, index) => (
+                        <div
+                          key={index}
+                          className="relative border rounded-lg p-2 group overflow-visible"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => removeFile(index)}
                           >
-                            <button
-                              type="button"
-                              onClick={() => removeFile(index)}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
+                            <X className="w-4 h-4" />
+                          </button>
 
-                            {filePreviews[index] &&
-                            file.type.startsWith("image/") ? (
+                          {filePreviews[index] &&
+                            file.type.startsWith("image/") && (
                               <div className="relative aspect-square">
                                 <Image
                                   src={filePreviews[index]}
@@ -324,42 +304,30 @@ export default function PagePurchases({
                                   sizes="100px"
                                 />
                               </div>
-                            ) : (
-                              <div className="aspect-square flex items-center justify-center bg-gray-100 rounded">
-                                <Upload className="w-8 h-8 text-gray-400" />
-                              </div>
                             )}
 
-                            <p
-                              className="mt-2 text-xs truncate"
-                              title={file.name}
-                            >
-                              {file.name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {(file.size / 1024).toFixed(1)} KB
-                            </p>
-                          </div>
-                        ))}
-                      </div>
+                          <p className="text-xs text-gray-500">
+                            {(file.size / 1024).toFixed(1)} KB
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </Field>
+                  </div>
+                )}
               </FieldGroup>
             </FieldSet>
           </div>
 
           <div className="mt-0 py-2 flex items-center justify-end gap-6">
-            {data && (
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => router.back()}
-                disabled={uploading}
-              >
-                Выйти
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => router.back()}
+              disabled={uploading}
+            >
+              Выйти
+            </Button>
+
             <Button
               type="submit"
               disabled={form.formState.isSubmitting || uploading}

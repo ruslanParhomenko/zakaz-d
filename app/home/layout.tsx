@@ -10,14 +10,6 @@ const navItems = [
     title: "архив",
     href: "archive",
   },
-  {
-    title: "закупка",
-    href: "purchases",
-  },
-  {
-    title: "приход",
-    href: "add-cash",
-  },
 ];
 
 export default function HomeLayout({
