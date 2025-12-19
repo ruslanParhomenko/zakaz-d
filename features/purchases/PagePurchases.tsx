@@ -9,7 +9,7 @@ import {
 } from "@/app/actions/purchases/purchasesAction";
 import { toast } from "sonner";
 import { defaultValuesPurchase, PurchaseType, schemaPurchase } from "./schema";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
@@ -17,6 +17,7 @@ import FieldForm from "@/components/input/FieldForm";
 import ViewUploadedFoto from "./ViewUploadedFoto";
 import { uploadToImgBB } from "@/app/actions/uploadedImgBB/upload-imgbb";
 import { createUrlPhotoByDay } from "@/app/actions/url-photo/urlAction";
+import { convertImageToPng } from "@/utils/convertImageToPng";
 
 export default function PagePurchases({
   data,
@@ -31,29 +32,44 @@ export default function PagePurchases({
 }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
+  console.log(selectedFiles);
+
   const form = useForm<PurchaseType>({
     resolver: yupResolver(schemaPurchase) as any,
     defaultValues: defaultValuesPurchase,
   });
 
-  const purchase = useWatch({ control: form.control, name: "purchase" });
-  const fuel = useWatch({ control: form.control, name: "fuel" });
-  const cleaning = useWatch({ control: form.control, name: "cleaning" });
-  const payment = useWatch({ control: form.control, name: "payment" });
-  const total = +purchase + +fuel + +cleaning + +payment;
+  const [purchase = 0, fuel = 0, cleaning = 0, payment = 0] = useWatch({
+    control: form.control,
+    name: ["purchase", "fuel", "cleaning", "payment"],
+  });
+
+  const total = useMemo(
+    () => Number(purchase) + Number(fuel) + Number(cleaning) + Number(payment),
+    [purchase, fuel, cleaning, payment]
+  );
 
   const MAX_SIZE = 5000 * 1024;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
-    const invalid = files.filter((f) => f.size > MAX_SIZE);
-    if (invalid.length) {
+    const oversized = files.filter((f) => f.size > MAX_SIZE);
+    if (oversized.length) {
       toast.error("Фото должно быть не больше 5мб");
       return;
     }
 
-    setSelectedFiles((prev) => [...prev, ...files]);
+    try {
+      const processed = await Promise.all(
+        files.map((file) => convertImageToPng(file))
+      );
+
+      setSelectedFiles((prev) => [...prev, ...processed]);
+    } catch (err) {
+      console.error(err);
+      toast.error("Ошибка обработки изображения HEIC");
+    }
   };
 
   const onSubmit: SubmitHandler<PurchaseType> = async (data) => {
@@ -127,6 +143,7 @@ export default function PagePurchases({
             type="file"
             hidden
             multiple
+            accept="image/*"
             onChange={handleFileChange}
           />
 
