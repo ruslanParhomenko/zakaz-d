@@ -9,7 +9,7 @@ import {
 } from "@/app/actions/add-cash/addCashAction";
 
 import { useEffect } from "react";
-import SubmitButton from "@/components/button/SubmitButton";
+
 import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
 import FieldForm from "@/components/input/FieldForm";
 import { FieldSet } from "@/components/ui/field";
@@ -54,7 +54,7 @@ export default function PageAddCash({
   }, [data, day, month, year]);
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
-      <FieldSet className="flex flex-1 items-center justify-center">
+      <FieldSet className="flex flex-1 items-center justify-center pb-20">
         <FieldForm fieldLabel="поступление" fieldName="addCash" />
       </FieldSet>
     </FormWrapperWithDate>

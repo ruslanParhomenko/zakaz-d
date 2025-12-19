@@ -3,6 +3,7 @@ import {
   UrlsTypeData,
 } from "@/app/actions/url-photo/urlAction";
 import PageFoto from "@/features/foto/PageFoto";
+import { getMonthDays } from "@/lib/utils";
 
 export default async function Page({
   searchParams,
@@ -13,7 +14,8 @@ export default async function Page({
   if (!month || !year) return null;
   const docId = `${year}-${month}`;
   const dataUrls = await getAddUrlsByMonthYear(docId);
-  return (
-    <PageFoto dataUrls={dataUrls as UrlsTypeData} month={+month} year={+year} />
-  );
+
+  const days = getMonthDays({ month: +month, year: +year });
+
+  return <PageFoto dataUrls={dataUrls as UrlsTypeData} days={days} />;
 }

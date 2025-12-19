@@ -69,7 +69,7 @@ function NumericInput({
             </PopoverTrigger>
             <PopoverContent
               className={cn(
-                "w-65 p-3 grid grid-cols-3 gap-3 border-none bg-background"
+                "w-60 p-3 grid grid-cols-3 gap-3 border-none bg-background"
               )}
             >
               {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (

@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster position="top-center" />
-        <div className="flex h-screen flex-col">
+        <div className="flex h-[90vh] flex-col">
           <main className="flex-1">{children}</main>
           <NavFooter />
         </div>

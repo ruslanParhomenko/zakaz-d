@@ -18,7 +18,7 @@ export default function FieldForm({
     <>
       <Field
         orientation="horizontal"
-        className="grid grid-cols-[45%_40%_10%] w-full max-w-xl"
+        className="grid grid-cols-[45%_40%_10%] w-full max-w-xl h-8"
       >
         <FieldLabel>{fieldLabel}</FieldLabel>
 

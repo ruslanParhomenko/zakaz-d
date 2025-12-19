@@ -1,5 +1,5 @@
 // utils/fileUtils.ts
-export const MAX_SIZE = 100_000; // 100 KB
+export const MAX_SIZE = 300_000; // 100 KB
 
 /**
  * Проверяет файл и уменьшает его размер, если он больше MAX_SIZE.

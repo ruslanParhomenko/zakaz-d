@@ -24,7 +24,7 @@ export default function FormWrapperWithDate({
         onSubmit={form.handleSubmit(onSubmit as SubmitHandler<any>)}
         className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[75vh]"
       >
-        <div className="flex w-full items-center justify-end px-4 py-4">
+        <div className="flex w-full items-center justify-end px-4 py-2">
           <DatePickerInput
             fieldName="date"
             className="text-blue-600  text-md"
@@ -36,7 +36,7 @@ export default function FormWrapperWithDate({
             onClick={() => form.resetField("date")}
           />
         </div>
-        <Separator className="bg-blue-800  mb-8" />
+        <Separator className="bg-blue-800  mb-2" />
         {children}
         <SubmitButton isSubmitting={form.formState.isSubmitting} />
       </form>

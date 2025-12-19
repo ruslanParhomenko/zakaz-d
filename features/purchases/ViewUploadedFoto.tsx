@@ -16,7 +16,7 @@ export default function ViewUploadedFoto({
   };
   return (
     <div>
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
         {data.map((file, index) => (
           <div
             key={index}

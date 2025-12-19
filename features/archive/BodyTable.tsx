@@ -12,13 +12,12 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { getMonthDays } from "@/lib/utils";
-import { PenBox, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
@@ -145,17 +144,25 @@ export default function BodyTable({
   );
   return (
     <>
-      <Table className="table-fixed w-full">
+      <Table className="table-fixed w-full border-collapse">
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/4 text-left"></TableHead>
-            <TableHead className="w-1/4 text-center text-blue-700 border-r">
-              приход
+          <TableRow className="border-b border-black">
+            <TableHead className="w-1/4 text-center text-blue-800">
+              {" "}
+              {totalIncome}{" "}
+            </TableHead>
+            <TableHead className="w-1/4 text-center text-blue-700">
+              {" "}
+              приход{" "}
             </TableHead>
             <TableHead className="w-1/4 text-center text-red-700">
-              расход
+              {" "}
+              расход{" "}
             </TableHead>
-            <TableHead className="w-1/4 text-center"></TableHead>
+            <TableHead className="w-1/4 text-center text-red-800">
+              {" "}
+              {totalExpense}{" "}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -174,55 +181,45 @@ export default function BodyTable({
               : 0;
 
             return (
-              <TableRow key={row.day}>
+              <TableRow
+                key={row.day}
+                onClick={() =>
+                  handleEditClick({
+                    addCashId: addCashByDay ? row.day : undefined,
+                    purchaseId: purchaseByDay ? row.day : undefined,
+                  })
+                }
+                className="cursor-pointer border-b"
+              >
                 <TableCell className="w-1/4 text-left py-1">
-                  {row.day} - {row.weekday}
+                  {String(row.day).padStart(2, "0")} - {row.weekday}
                 </TableCell>
-                <TableCell className="w-1/4 text-center text-blue-700 font-bold border-r py-1">
+
+                <TableCell className="w-1/4 text-center text-blue-700">
                   {income || ""}
                 </TableCell>
-                <TableCell className="w-1/4 text-center text-red-700 font-bold py-1">
+                <TableCell className="w-1/4 text-center text-red-700">
                   {expense || ""}
                 </TableCell>
                 <TableCell className="w-1/4 text-center py-1">
-                  <div className="w-full flex flex-row justify-between items-center h-full px-2">
-                    <PenBox
-                      className="w-5 h-4 cursor-pointer text-blue-800"
-                      onClick={() =>
-                        handleEditClick({
-                          addCashId: addCashByDay ? row.day : undefined,
-                          purchaseId: purchaseByDay ? row.day : undefined,
-                        })
-                      }
-                    />
-
-                    <Trash2Icon
-                      className="w-5 h-4 cursor-pointer text-red-800"
-                      onClick={() =>
-                        handleDeleteClick({
-                          addCashId: addCashByDay ? row.day : undefined,
-                          purchaseId: purchaseByDay ? row.day : undefined,
-                        })
-                      }
-                    />
+                  <div className="w-full flex flex-row justify-end items-center h-full px-2">
+                    {isAdmin && (
+                      <Trash2Icon
+                        className="w-5 h-4 cursor-pointer"
+                        onClick={() =>
+                          handleDeleteClick({
+                            addCashId: addCashByDay ? row.day : undefined,
+                            purchaseId: purchaseByDay ? row.day : undefined,
+                          })
+                        }
+                      />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell className="w-1/4"></TableCell>
-            <TableCell className="w-1/4 text-center text-blue-700 font-bold p-1">
-              {totalIncome}
-            </TableCell>
-            <TableCell className="w-1/4 text-center text-red-700 font-bold p-1">
-              {totalExpense}
-            </TableCell>
-            <TableCell className="w-1/4"></TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
 
       <ModalDialog

@@ -31,7 +31,6 @@ export default function PagePurchases({
   year: number;
 }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  console.log("selectedFiles   after", selectedFiles);
 
   const form = useForm<PurchaseType>({
     resolver: yupResolver(schemaPurchase) as any,
@@ -48,9 +47,9 @@ export default function PagePurchases({
     [purchase, fuel, cleaning, payment]
   );
 
-  const MAX_SIZE = 100_000; // 100 KB
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (selectedFiles.length > 2) return toast.error("Максимум 2 фото");
+
     const files = Array.from(e.target.files || []);
     const processedFiles = await Promise.all(files.map(resizeFileIfNeeded));
     setSelectedFiles((prev) => [...prev, ...processedFiles]);
@@ -112,7 +111,7 @@ export default function PagePurchases({
         {total}
       </Label>
 
-      <FieldSet className="flex flex-1 items-center justify-center">
+      <FieldSet className="flex flex-1  justify-start pt-10">
         <FieldGroup>
           <FieldForm fieldLabel="закупка" fieldName="purchase" />
 
@@ -134,6 +133,7 @@ export default function PagePurchases({
             type="file"
             hidden
             multiple
+            accept="image/jpeg,image/png,image/webp"
             onChange={handleFileChange}
           />
 
