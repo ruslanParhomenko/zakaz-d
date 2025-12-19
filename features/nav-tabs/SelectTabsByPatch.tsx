@@ -18,14 +18,14 @@ export default function SelectTabsByPatch({
 }) {
   return (
     <Tabs value={patch} onValueChange={(value) => setPatch(value)}>
-      <TabsList className="flex md:gap-2 h-10">
+      <TabsList className="flex md:gap-2 h-9">
         {navItems.map((page) => (
           <TabsTrigger
             key={page.title}
             value={page.href}
             disabled={isPending}
             className={cn(
-              " text-white font-bold cursor-pointer p-0",
+              "text-white font-bold cursor-pointer p-0",
               isPending && "opacity-50",
               className
             )}

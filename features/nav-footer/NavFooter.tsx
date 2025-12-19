@@ -6,7 +6,7 @@ export default function NavFooter() {
   return (
     <div className="px-6 py-2 w-full flex justify-start">
       <button onClick={() => signOut({ callbackUrl: "/" })}>
-        <LogOut className="w-6 h-6 text-blue-700 font-bold" />
+        <LogOut className="w-4 h-4 text-blue-700 font-bold" />
       </button>
     </div>
   );

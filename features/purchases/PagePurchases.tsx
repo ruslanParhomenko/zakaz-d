@@ -111,7 +111,7 @@ export default function PagePurchases({
         {total}
       </Label>
 
-      <FieldSet className="flex flex-1  justify-start pt-10">
+      <FieldSet className="flex flex-1  justify-start pt-4">
         <FieldGroup>
           <FieldForm fieldLabel="закупка" fieldName="purchase" />
 

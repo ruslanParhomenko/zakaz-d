@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getMonthDays } from "@/lib/utils";
-import { Trash2Icon } from "lucide-react";
+import { PenBox, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
@@ -181,16 +181,7 @@ export default function BodyTable({
               : 0;
 
             return (
-              <TableRow
-                key={row.day}
-                onClick={() =>
-                  handleEditClick({
-                    addCashId: addCashByDay ? row.day : undefined,
-                    purchaseId: purchaseByDay ? row.day : undefined,
-                  })
-                }
-                className="cursor-pointer border-b"
-              >
+              <TableRow key={row.day} className="cursor-pointer border-b">
                 <TableCell className="w-1/4 text-left py-1">
                   {String(row.day).padStart(2, "0")} - {row.weekday}
                 </TableCell>
@@ -202,7 +193,16 @@ export default function BodyTable({
                   {expense || ""}
                 </TableCell>
                 <TableCell className="w-1/4 text-center py-1">
-                  <div className="w-full flex flex-row justify-end items-center h-full px-2">
+                  <div className="w-full flex flex-row justify-end items-center h-full px-2 gap-8">
+                    <PenBox
+                      className="w-5 h-4 cursor-pointer"
+                      onClick={() =>
+                        handleEditClick({
+                          addCashId: addCashByDay ? row.day : undefined,
+                          purchaseId: purchaseByDay ? row.day : undefined,
+                        })
+                      }
+                    />
                     {isAdmin && (
                       <Trash2Icon
                         className="w-5 h-4 cursor-pointer"
