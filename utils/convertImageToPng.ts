@@ -1,69 +1,96 @@
-import heic2any from "heic2any";
+// import heic2any from "heic2any";
 
-export const convertImageToPng = async (file: File): Promise<File> => {
-  // Уже PNG — ничего не делаем
-  if (file.type === "image/png") {
-    return file;
-  }
+// const MAX_SIZE = 5_000_000;
+// const MAX_DIMENSION = 1920;
 
-  // HEIC / HEIF
-  if (file.type === "image/heic" || file.type === "image/heif") {
-    const blob = (await heic2any({
-      blob: file,
-      toType: "image/png",
-      quality: 1,
-    })) as Blob;
+// export const convertImageToPng = async (file: File): Promise<File> => {
+//   let pngFile: File;
 
-    return new File([blob], file.name.replace(/\.(heic|heif)$/i, ".png"), {
-      type: "image/png",
-    });
-  }
+//   if (file.type === "image/png") {
+//     pngFile = file;
+//   } else if (file.type === "image/heic" || file.type === "image/heif") {
+//     const blob = (await heic2any({
+//       blob: file,
+//       toType: "image/png",
+//       quality: 1,
+//     })) as Blob;
 
-  // JPG / WEBP → PNG через canvas
-  return convertRasterToPng(file);
-};
+//     pngFile = new File([blob], file.name.replace(/\.(heic|heif)$/i, ".png"), {
+//       type: "image/png",
+//     });
+//   } else {
+//     pngFile = await convertRasterToPng(file);
+//   }
 
-const convertRasterToPng = (file: File): Promise<File> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+//   if (pngFile.size > MAX_SIZE) {
+//     pngFile = await resizePngFile(pngFile, MAX_DIMENSION);
+//   }
 
-    reader.onload = () => {
-      const img = new Image();
+//   return pngFile;
+// };
 
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
+// const resizePngFile = (file: File, maxDim: number): Promise<File> => {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
 
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          reject(new Error("Canvas context error"));
-          return;
-        }
+//     reader.onload = () => {
+//       const img = new Image();
 
-        ctx.drawImage(img, 0, 0);
+//       img.onload = () => {
+//         let { width, height } = img;
 
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            reject(new Error("PNG conversion failed"));
-            return;
-          }
+//         if (width > height && width > maxDim) {
+//           height = Math.round((height * maxDim) / width);
+//           width = maxDim;
+//         } else if (height > width && height > maxDim) {
+//           width = Math.round((width * maxDim) / height);
+//           height = maxDim;
+//         } else if (width === height && width > maxDim) {
+//           width = maxDim;
+//           height = maxDim;
+//         }
 
-          resolve(
-            new File([blob], file.name.replace(/\.[^/.]+$/, ".png"), {
-              type: "image/png",
-            })
-          );
-        }, "image/png");
-      };
+//         const canvas = document.createElement("canvas");
+//         canvas.width = width;
+//         canvas.height = height;
 
-      img.onerror = () => reject(new Error("Image decode error"));
+//         const ctx = canvas.getContext("2d");
+//         if (!ctx) {
+//           reject(new Error("Canvas context error"));
+//           return;
+//         }
 
-      img.src = reader.result as string;
-    };
+//         ctx.drawImage(img, 0, 0, width, height);
 
-    reader.onerror = () => reject(new Error("FileReader error"));
+//         canvas.toBlob(
+//           (blob) => {
+//             if (!blob) {
+//               reject(new Error("PNG conversion failed"));
+//               return;
+//             }
 
-    reader.readAsDataURL(file);
-  });
-};
+//             resolve(
+//               new File([blob], file.name.replace(/\.[^/.]+$/, ".png"), {
+//                 type: "image/png",
+//               })
+//             );
+//           },
+//           "image/png",
+//           0.9 // Качество 90%
+//         );
+//       };
+
+//       img.onerror = () => reject(new Error("Image decode error"));
+
+//       img.src = reader.result as string;
+//     };
+
+//     reader.onerror = () => reject(new Error("FileReader error"));
+
+//     reader.readAsDataURL(file);
+//   });
+// };
+
+// const convertRasterToPng = (file: File) => {
+//   return resizePngFile(file, MAX_DIMENSION);
+// };

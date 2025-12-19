@@ -17,7 +17,7 @@ import FieldForm from "@/components/input/FieldForm";
 import ViewUploadedFoto from "./ViewUploadedFoto";
 import { uploadToImgBB } from "@/app/actions/uploadedImgBB/upload-imgbb";
 import { createUrlPhotoByDay } from "@/app/actions/url-photo/urlAction";
-import { convertImageToPng } from "@/utils/convertImageToPng";
+import { resizeFileIfNeeded } from "@/utils/resizeFileImg";
 
 export default function PagePurchases({
   data,
@@ -31,8 +31,7 @@ export default function PagePurchases({
   year: number;
 }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
-  console.log(selectedFiles);
+  console.log("selectedFiles   after", selectedFiles);
 
   const form = useForm<PurchaseType>({
     resolver: yupResolver(schemaPurchase) as any,
@@ -49,40 +48,32 @@ export default function PagePurchases({
     [purchase, fuel, cleaning, payment]
   );
 
-  const MAX_SIZE = 5000 * 1024;
+  const MAX_SIZE = 100_000; // 100 KB
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-
-    const oversized = files.filter((f) => f.size > MAX_SIZE);
-    if (oversized.length) {
-      toast.error("Фото должно быть не больше 5мб");
-      return;
-    }
-
-    try {
-      const processed = await Promise.all(
-        files.map((file) => convertImageToPng(file))
-      );
-
-      setSelectedFiles((prev) => [...prev, ...processed]);
-    } catch (err) {
-      console.error(err);
-      toast.error("Ошибка обработки изображения HEIC");
-    }
+    const processedFiles = await Promise.all(files.map(resizeFileIfNeeded));
+    setSelectedFiles((prev) => [...prev, ...processedFiles]);
   };
 
   const onSubmit: SubmitHandler<PurchaseType> = async (data) => {
     try {
       if (selectedFiles.length > 0) {
-        const photoUrls = await uploadToImgBB(selectedFiles);
+        const result = await uploadToImgBB(selectedFiles);
+
+        if (!result.success) {
+          toast.error(result.error);
+          return;
+        }
+
+        const photoUrls = result.urls;
         await createUrlPhotoByDay({
           day: data.date.getDate(),
           month: data.date.getMonth() + 1,
           year: data.date.getFullYear(),
-          urls: photoUrls,
+          urls: photoUrls as string[],
         });
-        toast.success(`Загружено ${photoUrls.length} фото`);
+        toast.success(`Загружено ${photoUrls?.length} фото`);
       }
 
       await createPurchaseByDay({
@@ -143,7 +134,6 @@ export default function PagePurchases({
             type="file"
             hidden
             multiple
-            accept="image/*"
             onChange={handleFileChange}
           />
 
