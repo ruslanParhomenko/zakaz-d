@@ -193,9 +193,9 @@ export default function BodyTable({
                   {expense || ""}
                 </TableCell>
                 <TableCell className="w-1/4 text-center py-1">
-                  <div className="w-full flex flex-row justify-end items-center h-full px-2 gap-8">
+                  <div className="w-full flex flex-row justify-end items-center h-full pr-2 gap-4">
                     <PenBox
-                      className="w-5 h-4 cursor-pointer"
+                      className="w-5 h-5 cursor-pointer"
                       onClick={() =>
                         handleEditClick({
                           addCashId: addCashByDay ? row.day : undefined,
@@ -205,7 +205,7 @@ export default function BodyTable({
                     />
                     {isAdmin && (
                       <Trash2Icon
-                        className="w-5 h-4 cursor-pointer"
+                        className="w-5 h-5 cursor-pointer"
                         onClick={() =>
                           handleDeleteClick({
                             addCashId: addCashByDay ? row.day : undefined,
