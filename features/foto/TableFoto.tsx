@@ -10,15 +10,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ViewSelectPhoto from "./ViewSelectPhoto";
-import { UrlsTypeData } from "@/app/actions/url-photo/urlAction";
+import {
+  deleteUrlPhotoByDay,
+  UrlsTypeData,
+} from "@/app/actions/url-photo/urlAction";
 import { getMonthDays } from "@/lib/utils";
+import { Trash } from "lucide-react";
 
 export default function TableFoto({
   days,
   dataUrls,
+  month,
+  year,
 }: {
   days: ReturnType<typeof getMonthDays>;
   dataUrls: UrlsTypeData;
+  month: number;
+  year: number;
 }) {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
@@ -29,6 +37,7 @@ export default function TableFoto({
           <TableRow>
             <TableHead>день</TableHead>
             <TableHead>Фото</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,12 +49,20 @@ export default function TableFoto({
               <TableRow
                 key={day.day}
                 className="cursor-pointer hover:bg-gray-100"
-                onClick={() => setSelectedPhoto(urlsFoto[0])}
               >
                 <TableCell>
                   {day.day}- {day.weekday}
                 </TableCell>
-                <TableCell>открыть фото</TableCell>
+                <TableCell onClick={() => setSelectedPhoto(urlsFoto[0])}>
+                  открыть фото
+                </TableCell>
+                <TableCell
+                  onClick={() =>
+                    deleteUrlPhotoByDay({ day: day.day, month, year })
+                  }
+                >
+                  <Trash className="h-4 w-4 text-red-700" />
+                </TableCell>
               </TableRow>
             );
           })}

@@ -21,6 +21,7 @@ import { PenBox, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
+import { Label } from "@/components/ui/label";
 
 export default function BodyTable({
   month,
@@ -42,6 +43,9 @@ export default function BodyTable({
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<DialogMode>("edit");
+
+  const { totalPurchase, totalFuel, totalCleaning, totalPayment } =
+    calculateBalance(dataPurchases, dataAddCash);
 
   const [selectedIds, setSelectedIds] = useState<{
     addCashId?: number;
@@ -221,6 +225,20 @@ export default function BodyTable({
           })}
         </TableBody>
       </Table>
+      <div className="flex flex-row justify-between text-xs mt-auto">
+        <span>
+          <span className="font-medium pr-1">закупка:</span> {totalPurchase}
+        </span>
+        <span>
+          <span className="font-medium p-1">топливо:</span> {totalFuel}
+        </span>
+        <span>
+          <span className="font-medium p-1">химчистка:</span> {totalCleaning}
+        </span>
+        <span>
+          <span className="font-medium p-1">оплата:</span> {totalPayment}
+        </span>
+      </div>
 
       <ModalDialog
         open={dialogOpen}

@@ -24,6 +24,23 @@ export function calculateBalance(
     0
   );
 
+  const totalPurchase = Object.values(dataPurchases?.days || {}).reduce(
+    (acc, d) => acc + Number(d.purchase || 0),
+    0
+  );
+  const totalFuel = Object.values(dataPurchases?.days || {}).reduce(
+    (acc, d) => acc + Number(d.fuel || 0),
+    0
+  );
+  const totalCleaning = Object.values(dataPurchases?.days || {}).reduce(
+    (acc, d) => acc + Number(d.cleaning || 0),
+    0
+  );
+  const totalPayment = Object.values(dataPurchases?.days || {}).reduce(
+    (acc, d) => acc + Number(d.payment || 0),
+    0
+  );
+
   const remainingBalance = initialBalance + totalIncome - totalExpense;
 
   return {
@@ -31,5 +48,9 @@ export function calculateBalance(
     totalIncome,
     totalExpense,
     remainingBalance,
+    totalPurchase,
+    totalFuel,
+    totalCleaning,
+    totalPayment,
   };
 }

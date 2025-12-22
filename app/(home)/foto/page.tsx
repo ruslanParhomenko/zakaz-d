@@ -17,5 +17,12 @@ export default async function Page({
 
   const days = getMonthDays({ month: +month, year: +year });
 
-  return <PageFoto dataUrls={dataUrls as UrlsTypeData} days={days} />;
+  return (
+    <PageFoto
+      dataUrls={dataUrls as UrlsTypeData}
+      days={days}
+      month={+month}
+      year={+year}
+    />
+  );
 }

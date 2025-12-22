@@ -5,9 +5,13 @@ import TableFoto from "./TableFoto";
 export default function PageFoto({
   dataUrls,
   days,
+  month,
+  year,
 }: {
   dataUrls: UrlsTypeData;
   days: ReturnType<typeof getMonthDays>;
+  month: number;
+  year: number;
 }) {
   if (!dataUrls)
     return (
@@ -17,7 +21,7 @@ export default function PageFoto({
     );
   return (
     <div className="p-4">
-      <TableFoto days={days} dataUrls={dataUrls} />
+      <TableFoto days={days} dataUrls={dataUrls} month={month} year={year} />
     </div>
   );
 }
