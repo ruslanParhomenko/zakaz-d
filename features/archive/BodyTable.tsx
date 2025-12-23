@@ -21,7 +21,6 @@ import { PenBox, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
-import { Label } from "@/components/ui/label";
 
 export default function BodyTable({
   month,
@@ -37,6 +36,7 @@ export default function BodyTable({
   isAdmin: boolean;
 }) {
   const days = getMonthDays({ month, year });
+
   const router = useRouter();
 
   type DialogMode = "edit" | "delete";

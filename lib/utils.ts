@@ -14,12 +14,14 @@ export const getMonthDays = ({
 }) => {
   if (!month) return [];
 
-  if (month < 0) return [];
+  if (month < 1 || month > 12) return [];
+  const jsMonth = month - 1;
 
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInMonth = new Date(year, jsMonth + 1, 0).getDate();
 
   return Array.from({ length: daysInMonth }, (_, i) => {
-    const date = new Date(year, month, i + 1);
+    const date = new Date(year, jsMonth, i + 1);
+    console.log("date", date);
     return {
       day: i + 1,
       weekday: date
