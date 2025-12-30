@@ -149,23 +149,17 @@ export default function BodyTable({
   return (
     <>
       <Table className="table-fixed w-full border-collapse">
-        <TableHeader>
-          <TableRow className="border-b border-black">
-            <TableHead className="w-1/4 text-center text-blue-800">
-              {totalIncome}
-            </TableHead>
-            <TableHead className="w-1/4 text-center text-blue-700">
-              приход
-            </TableHead>
-            <TableHead className="w-1/4 text-center text-red-700">
-              расход
-            </TableHead>
-            <TableHead className="w-1/4 text-center text-red-800">
-              {totalExpense}
-            </TableHead>
-          </TableRow>
-        </TableHeader>
         <TableBody>
+          <TableRow className="border-b border-black">
+            <TableCell className="w-1/4" />
+            <TableCell className="w-1/4 text-center text-blue-700 p-1">
+              {totalIncome}
+            </TableCell>
+            <TableCell className="w-1/4 text-center text-red-700 p-1">
+              {totalExpense}
+            </TableCell>
+            <TableCell className="w-1/4" />
+          </TableRow>
           {days.map((row) => {
             const purchaseByDay = dataPurchases?.days?.[row.day];
             const addCashByDay = dataAddCash?.days?.[row.day];

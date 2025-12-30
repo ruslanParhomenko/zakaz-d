@@ -36,7 +36,7 @@ export default function NavMenuFooter() {
   return (
     <div className="flex w-full justify-center items-center gap-10 sticky bottom-0">
       <Button
-        className="w-36 text-white bg-blue-700 cursor-pointer"
+        className="w-36 text-white bg-blue-700 cursor-pointer h-8"
         variant={"outline"}
         onClick={() => addCashUrl()}
         disabled={isPending}
@@ -44,7 +44,7 @@ export default function NavMenuFooter() {
         приход
       </Button>
       <Button
-        className="w-36 text-white bg-red-800 cursor-pointer"
+        className="w-36 text-white bg-red-800 cursor-pointer h-8"
         variant={"outline"}
         onClick={() => purchasesUrl()}
         disabled={isPending}
