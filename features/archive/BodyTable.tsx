@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getMonthDays } from "@/lib/utils";
-import { PenBox, Trash2Icon } from "lucide-react";
+import { PenBox, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
@@ -152,20 +152,16 @@ export default function BodyTable({
         <TableHeader>
           <TableRow className="border-b border-black">
             <TableHead className="w-1/4 text-center text-blue-800">
-              {" "}
-              {totalIncome}{" "}
+              {totalIncome}
             </TableHead>
             <TableHead className="w-1/4 text-center text-blue-700">
-              {" "}
-              приход{" "}
+              приход
             </TableHead>
             <TableHead className="w-1/4 text-center text-red-700">
-              {" "}
-              расход{" "}
+              расход
             </TableHead>
             <TableHead className="w-1/4 text-center text-red-800">
-              {" "}
-              {totalExpense}{" "}
+              {totalExpense}
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -186,20 +182,23 @@ export default function BodyTable({
 
             return (
               <TableRow key={row.day} className="cursor-pointer border-b">
-                <TableCell className="w-1/4 text-left py-1">
-                  {String(row.day).padStart(2, "0")} - {row.weekday}
+                <TableCell className="w-1/4 text-left py-0">
+                  <div className="w-full flex flex-row justify-between items-center h-full">
+                    <span>{String(row.day).padStart(2, "0")}</span>
+                    <span>{row.weekday}</span>
+                  </div>
                 </TableCell>
 
-                <TableCell className="w-1/4 text-center text-blue-700">
+                <TableCell className="w-1/4 text-center text-blue-700 py-0">
                   {income || ""}
                 </TableCell>
-                <TableCell className="w-1/4 text-center text-red-700">
+                <TableCell className="w-1/4 text-center text-red-700 py-1">
                   {expense || ""}
                 </TableCell>
-                <TableCell className="w-1/4 text-center py-1">
-                  <div className="w-full flex flex-row justify-end items-center h-full pr-2 gap-4">
+                <TableCell className="w-1/4 text-center py-0">
+                  <div className="w-full flex flex-row justify-between items-center h-full">
                     <PenBox
-                      className="w-5 h-5 cursor-pointer"
+                      className="w-4 h-4 cursor-pointer"
                       onClick={() =>
                         handleEditClick({
                           addCashId: addCashByDay ? row.day : undefined,
@@ -208,8 +207,8 @@ export default function BodyTable({
                       }
                     />
                     {isAdmin && (
-                      <Trash2Icon
-                        className="w-5 h-5 cursor-pointer"
+                      <TrashIcon
+                        className="w-4 h-4 cursor-pointer text-red-700"
                         onClick={() =>
                           handleDeleteClick({
                             addCashId: addCashByDay ? row.day : undefined,
@@ -225,20 +224,6 @@ export default function BodyTable({
           })}
         </TableBody>
       </Table>
-      <div className="flex flex-row justify-between text-xs mt-auto">
-        <span>
-          <span className="font-medium pr-1">закупка:</span> {totalPurchase}
-        </span>
-        <span>
-          <span className="font-medium p-1">топливо:</span> {totalFuel}
-        </span>
-        <span>
-          <span className="font-medium p-1">химчистка:</span> {totalCleaning}
-        </span>
-        <span>
-          <span className="font-medium p-1">оплата:</span> {totalPayment}
-        </span>
-      </div>
 
       <ModalDialog
         open={dialogOpen}

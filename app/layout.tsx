@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import NavFooter from "@/features/nav-footer/NavFooter";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -30,10 +29,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster position="top-center" />
-        <div className="flex h-[90vh] flex-col">
-          <main className="flex-1">{children}</main>
-          <NavFooter />
-        </div>
+
+        {children}
       </body>
     </html>
   );

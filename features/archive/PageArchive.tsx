@@ -29,21 +29,25 @@ export default function PageArchive({
   );
 
   return (
-    <div className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[78vh] justify-start">
-      <HeaderInfoArchive
-        month={month}
-        year={year}
-        initialBalance={initialBalance}
-        remainingBalance={remainingBalance}
-      />
+    <div className="min-h-[90vh] w-full md:w-1/2 px-1 flex flex-col md:mx-auto">
+      <div className="flex-1">
+        <HeaderInfoArchive
+          month={month}
+          year={year}
+          initialBalance={initialBalance}
+          remainingBalance={remainingBalance}
+          dataPurchases={dataPurchases}
+          dataAddCash={dataAddCash}
+        />
 
-      <BodyTable
-        month={month}
-        year={year}
-        dataAddCash={dataAddCash}
-        dataPurchases={dataPurchases}
-        isAdmin={isAdmin}
-      />
+        <BodyTable
+          month={month}
+          year={year}
+          dataAddCash={dataAddCash}
+          dataPurchases={dataPurchases}
+          isAdmin={isAdmin}
+        />
+      </div>
 
       <NavMenuFooter />
     </div>
