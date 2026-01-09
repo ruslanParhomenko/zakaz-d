@@ -22,11 +22,13 @@ export default function TableFoto({
   dataUrls,
   month,
   year,
+  isAdmin,
 }: {
   days: ReturnType<typeof getMonthDays>;
   dataUrls: UrlsTypeData;
   month: number;
   year: number;
+  isAdmin: boolean;
 }) {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
@@ -35,9 +37,9 @@ export default function TableFoto({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>день</TableHead>
-            <TableHead>Фото</TableHead>
-            <TableHead></TableHead>
+            <TableHead />
+            <TableHead />
+            <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -58,10 +60,13 @@ export default function TableFoto({
                 </TableCell>
                 <TableCell
                   onClick={() =>
+                    isAdmin &&
                     deleteUrlPhotoByDay({ day: day.day, month, year })
                   }
                 >
-                  <Trash className="h-4 w-4 text-red-700" />
+                  <div className="flex justify-end items-center ">
+                    <Trash className="h-4 w-4 text-red-700" />
+                  </div>
                 </TableCell>
               </TableRow>
             );

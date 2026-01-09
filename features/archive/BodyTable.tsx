@@ -8,16 +8,9 @@ import {
   PurchasesTypeData,
 } from "@/app/actions/purchases/purchasesAction";
 import ModalDialog from "@/components/modal-dialog/ModalDialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { getMonthDays } from "@/lib/utils";
-import { PenBox, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
@@ -39,13 +32,7 @@ export default function BodyTable({
 
   const router = useRouter();
 
-  type DialogMode = "edit" | "delete";
-
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMode, setDialogMode] = useState<DialogMode>("edit");
-
-  const { totalPurchase, totalFuel, totalCleaning, totalPayment } =
-    calculateBalance(dataPurchases, dataAddCash);
 
   const [selectedIds, setSelectedIds] = useState<{
     addCashId?: number;
@@ -59,62 +46,23 @@ export default function BodyTable({
 
   const handlePurchaseAction = () => {
     if (!selectedIds?.purchaseId) return;
-
-    if (dialogMode === "edit") {
-      router.push(
-        `/purchases/${selectedIds.purchaseId}?month=${month}&year=${year}`
-      );
-    } else {
-      deletePurchaseByDay({
-        day: selectedIds.purchaseId,
-        month,
-        year,
-      });
-    }
+    deletePurchaseByDay({
+      day: selectedIds.purchaseId,
+      month,
+      year,
+    });
 
     closeDialog();
   };
 
   const handleAddCashAction = () => {
     if (!selectedIds?.addCashId) return;
-
-    if (dialogMode === "edit") {
-      router.push(
-        `/add-cash/${selectedIds.addCashId}?month=${month}&year=${year}`
-      );
-    } else {
-      deleteAddCashByDay({
-        day: selectedIds.addCashId,
-        month,
-        year,
-      });
-    }
-
+    deleteAddCashByDay({
+      day: selectedIds.addCashId,
+      month,
+      year,
+    });
     closeDialog();
-  };
-
-  const handleEditClick = ({
-    addCashId,
-    purchaseId,
-  }: {
-    addCashId?: number;
-    purchaseId?: number;
-  }) => {
-    if (addCashId && purchaseId) {
-      setSelectedIds({ addCashId, purchaseId });
-      setDialogMode("edit");
-      setDialogOpen(true);
-      return;
-    }
-
-    if (addCashId) {
-      router.push(`/add-cash/${addCashId}?month=${month}&year=${year}`);
-      return;
-    }
-
-    if (purchaseId) {
-      router.push(`/purchases/${purchaseId}?month=${month}&year=${year}`);
-    }
   };
 
   const handleDeleteClick = ({
@@ -128,7 +76,6 @@ export default function BodyTable({
 
     if (addCashId && purchaseId) {
       setSelectedIds({ addCashId, purchaseId });
-      setDialogMode("delete");
       setDialogOpen(true);
       return;
     }
@@ -177,29 +124,36 @@ export default function BodyTable({
             return (
               <TableRow key={row.day} className="cursor-pointer border-b">
                 <TableCell className="w-1/4 text-left py-0">
-                  <div className="w-full flex flex-row justify-between items-center h-full">
+                  <div className="w-full flex flex-row justify-start gap-4 items-center h-full">
                     <span>{String(row.day).padStart(2, "0")}</span>
                     <span>{row.weekday}</span>
                   </div>
                 </TableCell>
 
-                <TableCell className="w-1/4 text-center text-blue-700 py-0">
+                <TableCell
+                  className="w-1/4 text-center text-blue-700 py-0"
+                  onClick={() => {
+                    addCashByDay &&
+                      router.push(
+                        `/add-cash/${row.day}?month=${month}&year=${year}`
+                      );
+                  }}
+                >
                   {income || ""}
                 </TableCell>
-                <TableCell className="w-1/4 text-center text-red-700 py-1">
+                <TableCell
+                  className="w-1/4 text-center text-red-700 py-1"
+                  onClick={() => {
+                    purchaseByDay &&
+                      router.push(
+                        `/purchases/${row.day}?month=${month}&year=${year}`
+                      );
+                  }}
+                >
                   {expense || ""}
                 </TableCell>
                 <TableCell className="w-1/4 text-center py-0">
-                  <div className="w-full flex flex-row justify-between items-center h-full">
-                    <PenBox
-                      className="w-4 h-4 cursor-pointer"
-                      onClick={() =>
-                        handleEditClick({
-                          addCashId: addCashByDay ? row.day : undefined,
-                          purchaseId: purchaseByDay ? row.day : undefined,
-                        })
-                      }
-                    />
+                  <div className="w-full flex flex-row justify-end items-center h-full">
                     {isAdmin && (
                       <TrashIcon
                         className="w-4 h-4 cursor-pointer text-red-700"
@@ -222,7 +176,6 @@ export default function BodyTable({
       <ModalDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        mode={dialogMode}
         hasPurchase={!!selectedIds?.purchaseId}
         hasAddCash={!!selectedIds?.addCashId}
         onPurchaseAction={handlePurchaseAction}

@@ -34,7 +34,7 @@ export default function NavMenuFooter() {
   };
 
   return (
-    <div className="flex w-full justify-center items-center gap-10 sticky bottom-0">
+    <div className="flex w-full justify-between md:justify-end px-10 items-center gap-10 sticky bottom-0">
       <Button
         className="w-36 text-white bg-blue-700 cursor-pointer h-8"
         variant={"outline"}

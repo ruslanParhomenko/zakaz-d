@@ -35,7 +35,7 @@ export default function NavMenuHeader({
   }, [patch, month, year]);
 
   return (
-    <div className="py-2 px-1 sticky top-0 z-10 flex justify-between  gap-2 md:px-4 md:gap-10">
+    <div className="py-2 px-1 md:w-1/2 md:mx-auto sticky top-0 z-10 flex justify-between  gap-2 md:px-4 md:gap-10">
       <div className="flex justify-center items-center">
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
