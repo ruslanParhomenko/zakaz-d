@@ -44,7 +44,7 @@ export default function PagePurchases({
 
   const total = useMemo(
     () => Number(purchase) + Number(fuel) + Number(cleaning) + Number(payment),
-    [purchase, fuel, cleaning, payment]
+    [purchase, fuel, cleaning, payment],
   );
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +88,6 @@ export default function PagePurchases({
       toast.success("Данные сохранены");
       setSelectedFiles([]);
     } catch (error) {
-      console.error(error);
       toast.error("Ошибка загрузки фото");
     }
   };

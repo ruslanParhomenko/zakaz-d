@@ -1,5 +1,5 @@
-import { CloseAccess } from "@/components/wrapper/CloseAccess";
+import { InsufficientRights } from "@/components/wrapper/insufficient-rights";
 
 export default function Page() {
-  return <CloseAccess />;
+  return <InsufficientRights exitButton />;
 }

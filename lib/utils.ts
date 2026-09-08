@@ -21,7 +21,6 @@ export const getMonthDays = ({
 
   return Array.from({ length: daysInMonth }, (_, i) => {
     const date = new Date(year, jsMonth, i + 1);
-    console.log("date", date);
     return {
       day: i + 1,
       weekday: date

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
-export default function NavMenuFooter() {
+export function ActionFooterBar() {
   const router = useRouter();
   const params = useSearchParams();
   const month = Number(params.get("month"));
