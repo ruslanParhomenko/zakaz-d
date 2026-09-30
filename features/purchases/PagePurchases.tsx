@@ -19,7 +19,6 @@ import {
 import { toast } from "sonner";
 import { defaultValuesPurchase, PurchaseType, schemaPurchase } from "./schema";
 import { useEffect, useMemo, useState } from "react";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
 import FieldForm from "@/components/input/FieldForm";
@@ -114,12 +113,15 @@ export default function PagePurchases({
 
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
-      <div className="flex items-center justify-end px-3 text-xs font-bold text-blue-600">
-        {total}
-      </div>
-
       <FieldSet className="flex flex-1  justify-start pt-4">
         <FieldGroup>
+          <FieldLabel
+            className="text-base text-blue-700 flex items-center justify-end  gap-6 px-3 mb-4 w-full"
+            htmlFor="picture"
+          >
+            <Upload className="w-4 h-4" />
+            фото
+          </FieldLabel>
           <FieldForm
             icon={<ReceiptText className="w-5 h-5" />}
             label="закупка"
@@ -140,13 +142,10 @@ export default function PagePurchases({
             label="оплата"
             fieldName="payment"
           />
-          <FieldLabel
-            className="text-base text-blue-700 flex items-center justify-end w-full gap-6 px-3 pt-8"
-            htmlFor="picture"
-          >
-            <Upload className="w-4 h-4" />
-            фото
-          </FieldLabel>
+          <div className="flex items-center justify-end px-3 text-xs font-bold text-blue-600">
+            {total}
+          </div>
+
           <Input
             id="picture"
             type="file"
