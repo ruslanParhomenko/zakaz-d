@@ -26,13 +26,13 @@ export const authOptions: NextAuthOptions = {
   pages: { signIn: "/signin" },
 
   callbacks: {
-    async signIn({ profile }) {
-      const p = profile as
-        | { email?: string; email_verified?: boolean }
-        | undefined;
-      if (!p?.email_verified) return false;
-      return getRole(p.email) !== null;
-    },
+    // async signIn({ profile }) {
+    //   const p = profile as
+    //     | { email?: string; email_verified?: boolean }
+    //     | undefined;
+    //   if (!p?.email_verified) return false;
+    //   return getRole(p.email) !== null;
+    // },
 
     async jwt({ token, account, profile }) {
       if (account && profile) {
