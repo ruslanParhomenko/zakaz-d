@@ -24,14 +24,12 @@ export default async function PageFoto({
       </div>
     );
   return (
-    <div className="w-full flex justify-center items-center md:w-1/2 md:mx-auto">
-      <TableFoto
-        days={days}
-        dataUrls={dataUrls}
-        month={month}
-        year={year}
-        isAdmin={isAdmin}
-      />
-    </div>
+    <TableFoto
+      days={days}
+      dataUrls={dataUrls}
+      month={month}
+      year={year}
+      isAdmin={isAdmin}
+    />
   );
 }

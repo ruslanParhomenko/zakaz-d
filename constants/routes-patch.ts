@@ -1,10 +1,1 @@
-export const ROUTE_PATCH_TABS = [
-  {
-    title: "фото",
-    href: "foto",
-  },
-  {
-    title: "архив",
-    href: "archive",
-  },
-];
+export const ROUTE_PATCH_TABS = ["balance", "foto", "archive", "form"];

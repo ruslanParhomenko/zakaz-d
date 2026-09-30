@@ -1,14 +1,22 @@
-import * as yup from "yup";
+import { z } from "zod";
 
-export const schemaPurchase = yup.object().shape({
-  date: yup.date().required().default(new Date()),
+export const schemaPurchase = z.object({
+  date: z.date({ error: "Обязательное поле" }),
 
-  purchase: yup.string().default(""),
-  fuel: yup.string().default(""),
-  cleaning: yup.string().default(""),
-  payment: yup.string().default(""),
-  photos: yup.mixed(),
+  purchase: z.string(),
+  fuel: z.string(),
+  cleaning: z.string(),
+  payment: z.string(),
+  photos: z.any().optional(),
 });
 
-export type PurchaseType = yup.InferType<typeof schemaPurchase>;
-export const defaultValuesPurchase = schemaPurchase.getDefault();
+export type PurchaseType = z.infer<typeof schemaPurchase>;
+
+export const defaultValuesPurchase: PurchaseType = {
+  date: new Date(),
+  purchase: "",
+  fuel: "",
+  cleaning: "",
+  payment: "",
+  photos: undefined,
+};

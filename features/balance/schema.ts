@@ -1,10 +1,13 @@
-import * as yup from "yup";
+import { z } from "zod";
 
-export const schemaBalance = yup.object().shape({
-  date: yup.date().required().default(new Date()),
-
-  initialBalance: yup.string().required().default(""),
+export const schemaBalance = z.object({
+  date: z.date({ error: "Обязательное поле" }),
+  initialBalance: z.string().min(1, "Обязательное поле"),
 });
 
-export type BalanceType = yup.InferType<typeof schemaBalance>;
-export const defaultValuesBalance = schemaBalance.getDefault();
+export type BalanceType = z.infer<typeof schemaBalance>;
+
+export const defaultValuesBalance: BalanceType = {
+  date: new Date(),
+  initialBalance: "",
+};

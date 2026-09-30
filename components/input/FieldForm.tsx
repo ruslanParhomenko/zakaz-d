@@ -1,35 +1,30 @@
-"use client";
-
-import { useFormContext, useWatch } from "react-hook-form";
-import { Field, FieldLabel, FieldSeparator } from "../ui/field";
+import { ReactNode } from "react";
+import { Field, FieldSeparator } from "../ui/field";
 import NumericInput from "./NumericInput";
-import { Trash2Icon } from "lucide-react";
 
 export default function FieldForm({
-  fieldLabel,
+  icon,
+  label,
   fieldName,
 }: {
-  fieldLabel: string;
+  icon: ReactNode;
+  label: string;
   fieldName: string;
 }) {
-  const form = useFormContext();
-  const value = useWatch({ control: form.control, name: fieldName });
   return (
     <>
       <Field
         orientation="horizontal"
-        className="grid grid-cols-[45%_40%_10%] w-full max-w-xl h-8"
+        className="flex flex-row items-center justify-between px-3"
       >
-        <FieldLabel>{fieldLabel}</FieldLabel>
-
-        <NumericInput fieldName={fieldName} />
-
-        {value && (
-          <Trash2Icon
-            className="text-red-600 w-4 h-4 cursor-pointer"
-            onClick={() => form.resetField(fieldName)}
-          />
-        )}
+        <span
+          title={label}
+          aria-label={label}
+          className="shrink-0 text-blue-700"
+        >
+          {icon}
+        </span>
+        <NumericInput fieldName={fieldName} className="w-64" />
       </Field>
       <FieldSeparator />
     </>

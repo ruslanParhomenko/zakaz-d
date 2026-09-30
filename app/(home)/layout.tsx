@@ -1,15 +1,21 @@
-import { NavHeaderBar } from "@/features/nav-header-bar";
+import { NavFooter } from "@/features/nav-footer";
+import { NavHeader } from "@/features/nav-header";
 import { Suspense } from "react";
 
 export default function HomeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <NavHeaderBar />
+    <div className="flex h-dvh flex-col">
+      <Suspense fallback={null}>
+        <NavHeader />
       </Suspense>
-      {children}
-    </>
+      <main className="flex  flex-1 flex-col overflow-y-auto items-center p-3">
+        {children}
+      </main>
+      <Suspense fallback={null}>
+        <NavFooter />
+      </Suspense>
+    </div>
   );
 }

@@ -9,6 +9,7 @@ import { createBalanceByMonth } from "@/app/actions/balance/balanceAction";
 import { toast } from "sonner";
 import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
 import FieldForm from "@/components/input/FieldForm";
+import { Wallet } from "lucide-react";
 
 export default function PageBalance({
   month,
@@ -45,7 +46,11 @@ export default function PageBalance({
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={true}>
       <FieldSet className="flex flex-1 items-center justify-center">
-        <FieldForm fieldLabel="баланс" fieldName="initialBalance" />
+        <FieldForm
+          icon={<Wallet className="w-5 h-5" />}
+          label="остаток"
+          fieldName="initialBalance"
+        />
       </FieldSet>
     </FormWrapperWithDate>
   );

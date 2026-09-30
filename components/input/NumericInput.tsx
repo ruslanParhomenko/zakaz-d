@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 type NumericInputProps = {
   fieldName: string;
   id?: string;
-  readonly?: boolean;
   disabled?: boolean;
   placeholder?: string;
   className?: string;
@@ -31,7 +30,6 @@ function NumericInput({
   fieldName,
   id,
   placeholder,
-  readonly,
   disabled,
   className,
 }: NumericInputProps) {
@@ -56,20 +54,21 @@ function NumericInput({
               <FormControl>
                 <Input
                   id={id}
-                  value={value ? value : placeholder ?? ""}
+                  value={value ? value : (placeholder ?? "")}
                   disabled={disabled}
                   onClick={() => setOpen(true)}
                   className={cn(
                     "text-center bg-border rounded-md",
                     className,
-                    value && "bg-background border-0 shadow-none font-bold"
+                    value &&
+                      "bg-background border-0 shadow-none font-bold text-blue-600",
                   )}
                 />
               </FormControl>
             </PopoverTrigger>
             <PopoverContent
               className={cn(
-                "w-60 p-3 grid grid-cols-3 gap-3 border-none bg-background"
+                "w-60 p-3 grid grid-cols-3 gap-3 border-none bg-background",
               )}
             >
               {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (

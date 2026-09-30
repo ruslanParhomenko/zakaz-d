@@ -20,13 +20,11 @@ export default function BodyTable({
   year,
   dataPurchases,
   dataAddCash,
-  isAdmin,
 }: {
   month: number;
   year: number;
   dataPurchases: PurchasesTypeData;
   dataAddCash: AddCashTypeData;
-  isAdmin: boolean;
 }) {
   const days = getMonthDays({ month, year });
 
@@ -72,8 +70,6 @@ export default function BodyTable({
     addCashId?: number;
     purchaseId?: number;
   }) => {
-    if (!isAdmin) return;
-
     if (addCashId && purchaseId) {
       setSelectedIds({ addCashId, purchaseId });
       setDialogOpen(true);
@@ -91,7 +87,7 @@ export default function BodyTable({
 
   const { totalIncome, totalExpense } = calculateBalance(
     dataPurchases,
-    dataAddCash
+    dataAddCash,
   );
   return (
     <>
@@ -105,7 +101,6 @@ export default function BodyTable({
             <TableCell className="w-1/4 text-center text-red-700 p-1">
               {totalExpense}
             </TableCell>
-            <TableCell className="w-1/4" />
           </TableRow>
           {days.map((row) => {
             const purchaseByDay = dataPurchases?.days?.[row.day];
@@ -125,8 +120,10 @@ export default function BodyTable({
               <TableRow key={row.day} className="cursor-pointer border-b">
                 <TableCell className="w-1/4 text-left py-0">
                   <div className="w-full flex flex-row justify-start gap-4 items-center h-full">
-                    <span>{String(row.day).padStart(2, "0")}</span>
-                    <span>{row.weekday}</span>
+                    <span className="text-xs">
+                      {String(row.day).padStart(2, "0")}
+                    </span>
+                    <span className="text-xs">{row.weekday}</span>
                   </div>
                 </TableCell>
 
@@ -135,7 +132,7 @@ export default function BodyTable({
                   onClick={() => {
                     addCashByDay &&
                       router.push(
-                        `/add-cash/${row.day}?month=${month}&year=${year}`
+                        `/add-cash/${row.day}?month=${month}&year=${year}`,
                       );
                   }}
                 >
@@ -146,26 +143,11 @@ export default function BodyTable({
                   onClick={() => {
                     purchaseByDay &&
                       router.push(
-                        `/purchases/${row.day}?month=${month}&year=${year}`
+                        `/purchases/${row.day}?month=${month}&year=${year}`,
                       );
                   }}
                 >
                   {expense || ""}
-                </TableCell>
-                <TableCell className="w-1/4 text-center py-0">
-                  <div className="w-full flex flex-row justify-end items-center h-full">
-                    {isAdmin && (
-                      <TrashIcon
-                        className="w-4 h-4 cursor-pointer text-red-700"
-                        onClick={() =>
-                          handleDeleteClick({
-                            addCashId: addCashByDay ? row.day : undefined,
-                            purchaseId: purchaseByDay ? row.day : undefined,
-                          })
-                        }
-                      />
-                    )}
-                  </div>
                 </TableCell>
               </TableRow>
             );

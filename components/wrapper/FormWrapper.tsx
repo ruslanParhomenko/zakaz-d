@@ -2,8 +2,6 @@
 
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import DatePickerInput from "../input/DatePickerInput";
-import { RefreshCcw } from "lucide-react";
-import { Separator } from "../ui/separator";
 import { Form } from "../ui/form";
 import SubmitButton from "../button/SubmitButton";
 
@@ -22,21 +20,12 @@ export default function FormWrapperWithDate({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit as SubmitHandler<any>)}
-        className="w-full md:w-1/2  px-4  flex flex-col md:mx-auto h-[78vh]"
+        className="w-full flex flex-col h-full"
       >
-        <div className="flex w-full items-center justify-end px-4 py-2">
-          <DatePickerInput
-            fieldName="date"
-            className="text-blue-600  text-md"
-            disabled={disabledData}
-          />
-
-          <RefreshCcw
-            className="w-4 h-4 text-blue-700"
-            onClick={() => form.resetField("date")}
-          />
+        <div className="flex w-full items-center justify-center px-4 py-2">
+          <DatePickerInput fieldName="date" disabled={disabledData} />
         </div>
-        <Separator className="bg-blue-800  mb-2" />
+
         {children}
         <SubmitButton isSubmitting={form.formState.isSubmitting} />
       </form>

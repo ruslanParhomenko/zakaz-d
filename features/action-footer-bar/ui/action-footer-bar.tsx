@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Minus, Plus } from "lucide-react";
 
 export function ActionFooterBar() {
   const router = useRouter();
@@ -34,22 +35,22 @@ export function ActionFooterBar() {
   };
 
   return (
-    <div className="flex w-full justify-between md:justify-end px-10 items-center gap-10 sticky bottom-0">
+    <div className="flex h-full justify-around items-center px-8 w-full">
       <Button
-        className="w-36 text-white bg-blue-700 cursor-pointer h-8"
+        className="w-22 cursor-pointer h-12 text-2xl border-2 border-blue-600"
         variant={"outline"}
         onClick={() => addCashUrl()}
         disabled={isPending}
       >
-        приход
+        <Plus className="text-blue-600 size-6" strokeWidth={6} />
       </Button>
       <Button
-        className="w-36 text-white bg-red-800 cursor-pointer h-8"
+        className="w-22 cursor-pointer h-12 text-2xl border-2 border-red-600"
         variant={"outline"}
         onClick={() => purchasesUrl()}
         disabled={isPending}
       >
-        расход
+        <Minus className="text-red-600 size-6" strokeWidth={6} />
       </Button>
     </div>
   );

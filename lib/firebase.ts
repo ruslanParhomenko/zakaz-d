@@ -1,18 +1,19 @@
-import admin from "firebase-admin";
+import { cert, getApps, initializeApp } from "firebase-admin";
+import { getFirestore } from "firebase-admin/firestore";
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(
-        /\\n/g,
-        "\n"
-      ).trim(),
-    }),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET, // 👈 важно
-  });
-}
+const app = !getApps().length
+  ? initializeApp({
+      credential: cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: `firebase-adminsdk-fbsvc@${process.env.FIREBASE_PROJECT_ID}.iam.gserviceaccount.com`,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(
+          /\\n/g,
+          "\n",
+        ).trim(),
+      }),
+    })
+  : getApps()[0];
 
-export const db = admin.firestore();
-export const bucket = admin.storage().bucket(); // 👈 экспорт bucket
+export const db = getFirestore(app);
+
+// export const bucket = admin.storage().bucket();

@@ -11,16 +11,12 @@ import {
   PurchasesTypeData,
 } from "@/app/actions/purchases/purchasesAction";
 import PageArchive from "@/features/archive/PageArchive";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  const session = await getServerSession(authOptions);
-  const isAdmin = session?.user.email === "parhomenkogm@gmail.com";
   const { month, year } = await searchParams;
 
   if (!month || !year) return null;
@@ -39,7 +35,6 @@ export default async function Page({
       dataBalance={dataBalance as BalanceTypeData}
       month={+month}
       year={+year}
-      isAdmin={isAdmin}
     />
   );
 }

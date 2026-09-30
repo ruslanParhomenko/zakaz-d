@@ -1,10 +1,13 @@
-import * as yup from "yup";
+import { z } from "zod";
 
-export const schemaAddCash = yup.object().shape({
-  date: yup.date().required().default(new Date()),
-
-  addCash: yup.string().required().default(""),
+export const schemaAddCash = z.object({
+  date: z.date({ error: "Обязательное поле" }),
+  addCash: z.string().min(1, "Обязательное поле"),
 });
 
-export type AddCashType = yup.InferType<typeof schemaAddCash>;
-export const defaultValuesAddCash = schemaAddCash.getDefault();
+export type AddCashType = z.infer<typeof schemaAddCash>;
+
+export const defaultValuesAddCash: AddCashType = {
+  date: new Date(),
+  addCash: "",
+};

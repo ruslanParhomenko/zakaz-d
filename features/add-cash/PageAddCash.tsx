@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
 import FieldForm from "@/components/input/FieldForm";
 import { FieldSet } from "@/components/ui/field";
+import { Coins, PiggyBank } from "lucide-react";
 
 export default function PageAddCash({
   data,
@@ -55,7 +56,11 @@ export default function PageAddCash({
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
       <FieldSet className="flex flex-1 items-center justify-center pb-20">
-        <FieldForm fieldLabel="поступление" fieldName="addCash" />
+        <FieldForm
+          icon={<Coins className="w-5 h-5" />}
+          label="Деньги"
+          fieldName="addCash"
+        />
       </FieldSet>
     </FormWrapperWithDate>
   );

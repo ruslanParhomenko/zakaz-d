@@ -1,12 +1,28 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { getHomeUrl } from "./lib/home-url";
+
+const PUBLIC_PATHS = ["/", "/signin", "/403"];
+const USER_SEGMENT = ["form", "add-cash", "purchases"];
+
+function getCurrentMonthYear() {
+  const now = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Europe/Chisinau" }),
+  );
+  return { month: String(now.getMonth() + 1), year: String(now.getFullYear()) };
+}
+
+function withMonthYear(url: URL) {
+  const { month, year } = getCurrentMonthYear();
+  url.searchParams.set("month", month);
+  url.searchParams.set("year", year);
+  return url;
+}
 
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
 
-  if (pathname === "/403") {
+  if (PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
 
@@ -15,29 +31,29 @@ export async function proxy(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const role = token?.role;
+  if (!token) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
-  if (role !== "ADMIN") {
-    if (pathname === "/") {
+  const hasParams = searchParams.has("month") && searchParams.has("year");
+
+  if (token.role === "ADMIN") {
+    if (hasParams) return NextResponse.next();
+
+    return NextResponse.redirect(withMonthYear(new URL(request.url)));
+  }
+
+  if (token.role === "USER") {
+    const segment = pathname.split("/")[1];
+
+    if (USER_SEGMENT.includes(segment) && hasParams) {
       return NextResponse.next();
     }
 
-    return NextResponse.redirect(new URL("/403", request.url));
+    return NextResponse.redirect(withMonthYear(new URL("/form", request.url)));
   }
 
-  if (pathname === "/") {
-    return NextResponse.redirect(getHomeUrl(request));
-  }
-  if (pathname !== "/403") {
-    const hasMonth = request.nextUrl.searchParams.has("month");
-    const hasYear = request.nextUrl.searchParams.has("year");
-
-    if (!hasMonth || !hasYear) {
-      return NextResponse.redirect(getHomeUrl(request, "/archive"));
-    }
-  }
-
-  return NextResponse.next();
+  return NextResponse.redirect(new URL("/403", request.url));
 }
 
 export const config = {

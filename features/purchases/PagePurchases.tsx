@@ -1,6 +1,15 @@
 "use client";
 import { FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Upload } from "lucide-react";
+import {
+  Car,
+  Droplets,
+  Fuel,
+  ReceiptText,
+  Shirt,
+  ShoppingBasket,
+  Store,
+  Upload,
+} from "lucide-react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -105,27 +114,38 @@ export default function PagePurchases({
 
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
-      <Label>
-        <span className="mr-4">всего:</span>
+      <div className="flex items-center justify-end px-3 text-xs font-bold text-blue-600">
         {total}
-      </Label>
+      </div>
 
       <FieldSet className="flex flex-1  justify-start pt-4">
         <FieldGroup>
-          <FieldForm fieldLabel="закупка" fieldName="purchase" />
-
-          <FieldForm fieldLabel="топливо" fieldName="fuel" />
-
-          <FieldForm fieldLabel="хим-чистка" fieldName="cleaning" />
-
-          <FieldForm fieldLabel="оплата" fieldName="payment" />
-
+          <FieldForm
+            icon={<ReceiptText className="w-5 h-5" />}
+            label="закупка"
+            fieldName="purchase"
+          />
+          <FieldForm
+            icon={<Fuel className="w-5 h-5" />}
+            label="топливо"
+            fieldName="fuel"
+          />
+          <FieldForm
+            icon={<Car className="w-5 h-5" />}
+            label="мойка авто"
+            fieldName="cleaning"
+          />
+          <FieldForm
+            icon={<ShoppingBasket className="w-5 h-5" />}
+            label="оплата"
+            fieldName="payment"
+          />
           <FieldLabel
-            className="text-base text-blue-700 flex items-center gap-6"
+            className="text-base text-blue-700 flex items-center justify-end w-full gap-6 px-3 pt-8"
             htmlFor="picture"
           >
             <Upload className="w-4 h-4" />
-            фото чеков
+            фото
           </FieldLabel>
           <Input
             id="picture"
@@ -135,7 +155,6 @@ export default function PagePurchases({
             accept="image/jpeg,image/png,image/webp"
             onChange={handleFileChange}
           />
-
           <ViewUploadedFoto
             data={selectedFiles}
             setSelectedFiles={setSelectedFiles}

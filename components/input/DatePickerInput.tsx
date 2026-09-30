@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
+import { useState } from "react";
 
 function DatePickerInput({
   fieldName,
@@ -27,6 +28,7 @@ function DatePickerInput({
   disabled?: boolean;
 }) {
   const { control } = useFormContext();
+  const [open, setOpen] = useState(false);
 
   return (
     <FormField
@@ -35,7 +37,7 @@ function DatePickerInput({
       render={({ field }) => {
         return (
           <FormItem>
-            <Popover>
+            <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
@@ -46,14 +48,16 @@ function DatePickerInput({
                       "rounded-md bg-border",
                       className,
                       field.value &&
-                        "bg-background border-0 shadow-none font-bold"
+                        "bg-background border-0 shadow-none font-bold tracking-wider",
                     )}
                   >
                     {field.value &&
                       field.value?.getDate() +
                         "." +
+                        " " +
                         (Number(field.value?.getMonth()) + 1) +
                         "." +
+                        " " +
                         field.value?.getFullYear()}
                   </Button>
                 </FormControl>
@@ -62,7 +66,10 @@ function DatePickerInput({
                 <Calendar
                   mode="single"
                   selected={field.value}
-                  onSelect={field.onChange}
+                  onSelect={(date) => {
+                    field.onChange(date);
+                    setOpen(false);
+                  }}
                   weekStartsOn={1}
                   id={id}
                 />
