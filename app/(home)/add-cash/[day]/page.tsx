@@ -1,8 +1,5 @@
-import {
-  AddCashTypeData,
-  getAddCashByMonthYear,
-} from "@/app/actions/add-cash/addCashAction";
-import PageAddCash from "@/features/add-cash/PageAddCash";
+import { AddCashForm } from "@/features/add-cash";
+import { getAddCashByMonthYear } from "@/features/add-cash/actions/get-data-add-cash";
 
 export default async function Page({
   params,
@@ -16,11 +13,11 @@ export default async function Page({
   if (!month || !year || !day) return null;
 
   const docId = `${year}-${month}`;
-  const dataPurchases = (await getAddCashByMonthYear(docId)) as AddCashTypeData;
+  const dataPurchases = await getAddCashByMonthYear(docId);
 
   const dataByDay = dataPurchases?.days?.[+day];
 
   return (
-    <PageAddCash data={dataByDay} day={+day} month={+month} year={+year} />
+    <AddCashForm data={dataByDay} day={+day} month={+month} year={+year} />
   );
 }

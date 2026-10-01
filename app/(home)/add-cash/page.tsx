@@ -1,4 +1,4 @@
-import PageAddCash from "@/features/add-cash/PageAddCash";
+import { AddCashForm } from "@/features/add-cash";
 
 export default async function Page({
   searchParams,
@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const { month, year } = await searchParams;
   if (!month || !year) return null;
-  return <PageAddCash month={+month} year={+year} />;
+  return <AddCashForm month={+month} year={+year} />;
 }

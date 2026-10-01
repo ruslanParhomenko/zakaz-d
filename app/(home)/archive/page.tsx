@@ -1,8 +1,4 @@
 import {
-  AddCashTypeData,
-  getAddCashByMonthYear,
-} from "@/app/actions/add-cash/addCashAction";
-import {
   BalanceTypeData,
   getAddBalanceByMonthYear,
 } from "@/app/actions/balance/balanceAction";
@@ -10,6 +6,7 @@ import {
   getPurchasesByMonthYear,
   PurchasesTypeData,
 } from "@/app/actions/purchases/purchasesAction";
+import { getAddCashByMonthYear } from "@/features/add-cash/actions/get-data-add-cash";
 import PageArchive from "@/features/archive/PageArchive";
 
 export default async function Page({
@@ -31,7 +28,7 @@ export default async function Page({
   return (
     <PageArchive
       dataPurchases={dataPurchases as PurchasesTypeData}
-      dataAddCash={dataAddCash as AddCashTypeData}
+      dataAddCash={dataAddCash}
       dataBalance={dataBalance as BalanceTypeData}
       month={+month}
       year={+year}

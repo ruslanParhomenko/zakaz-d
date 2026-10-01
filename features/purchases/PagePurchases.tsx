@@ -1,17 +1,7 @@
 "use client";
 import { FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import {
-  Car,
-  Droplets,
-  Fuel,
-  ReceiptText,
-  Shirt,
-  ShoppingBasket,
-  Store,
-  Upload,
-} from "lucide-react";
+import { Car, Fuel, ReceiptText, ShoppingBasket, Upload } from "lucide-react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   createPurchaseByDay,
   PurchasesTypeData,
@@ -26,6 +16,7 @@ import ViewUploadedFoto from "./ViewUploadedFoto";
 import { uploadToImgBB } from "@/app/actions/uploadedImgBB/upload-imgbb";
 import { createUrlPhotoByDay } from "@/app/actions/url-photo/urlAction";
 import { resizeFileIfNeeded } from "@/utils/resizeFileImg";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function PagePurchases({
   data,
@@ -41,7 +32,7 @@ export default function PagePurchases({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const form = useForm<PurchaseType>({
-    resolver: yupResolver(schemaPurchase) as any,
+    resolver: zodResolver(schemaPurchase),
     defaultValues: defaultValuesPurchase,
   });
 
@@ -98,6 +89,8 @@ export default function PagePurchases({
     } catch (error) {
       toast.error("Ошибка загрузки фото");
     }
+
+    form.reset();
   };
   useEffect(() => {
     if (!data || !day || !month || !year) return;

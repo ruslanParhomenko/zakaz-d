@@ -1,8 +1,8 @@
 "use client";
-import { AddCashTypeData } from "@/app/actions/add-cash/addCashAction";
 import { PurchasesTypeData } from "@/app/actions/purchases/purchasesAction";
 import { Label } from "@/components/ui/label";
 import { calculateBalance } from "./utils";
+import { GetAddCashByMonthYearType } from "../add-cash/model/type";
 
 export default function HeaderInfoArchive({
   initialBalance,
@@ -13,7 +13,7 @@ export default function HeaderInfoArchive({
   initialBalance: number;
   remainingBalance: number;
   dataPurchases: PurchasesTypeData;
-  dataAddCash: AddCashTypeData;
+  dataAddCash: GetAddCashByMonthYearType | null;
 }) {
   const { totalPurchase, totalFuel, totalCleaning, totalPayment } =
     calculateBalance(dataPurchases, dataAddCash);

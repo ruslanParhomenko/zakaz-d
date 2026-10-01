@@ -1,8 +1,5 @@
 "use client";
-import {
-  AddCashTypeData,
-  deleteAddCashByDay,
-} from "@/app/actions/add-cash/addCashAction";
+
 import {
   deletePurchaseByDay,
   PurchasesTypeData,
@@ -10,10 +7,11 @@ import {
 import ModalDialog from "@/components/modal-dialog/ModalDialog";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { getMonthDays } from "@/lib/utils";
-import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { calculateBalance } from "./utils";
+import { GetAddCashByMonthYearType } from "../add-cash/model/type";
+import { deleteAddCashByDay } from "../add-cash/actions/delete-day-add-cash";
 
 export default function BodyTable({
   month,
@@ -24,7 +22,7 @@ export default function BodyTable({
   month: number;
   year: number;
   dataPurchases: PurchasesTypeData;
-  dataAddCash: AddCashTypeData;
+  dataAddCash: GetAddCashByMonthYearType | null;
 }) {
   const days = getMonthDays({ month, year });
 
@@ -61,28 +59,6 @@ export default function BodyTable({
       year,
     });
     closeDialog();
-  };
-
-  const handleDeleteClick = ({
-    addCashId,
-    purchaseId,
-  }: {
-    addCashId?: number;
-    purchaseId?: number;
-  }) => {
-    if (addCashId && purchaseId) {
-      setSelectedIds({ addCashId, purchaseId });
-      setDialogOpen(true);
-      return;
-    }
-
-    if (addCashId) {
-      deleteAddCashByDay({ day: addCashId, month, year });
-    }
-
-    if (purchaseId) {
-      deletePurchaseByDay({ day: purchaseId, month, year });
-    }
   };
 
   const { totalIncome, totalExpense } = calculateBalance(
