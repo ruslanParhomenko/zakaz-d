@@ -3,11 +3,13 @@ import type { NextAuthOptions } from "next-auth";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const USER_EMAIL = process.env.USER_EMAIL;
+const USER_TEST_EMAIL = process.env.USER_TEST_EMAIL;
 
 function getRole(email?: string | null): "ADMIN" | "USER" | null {
   if (!email) return null;
   if (email === ADMIN_EMAIL) return "ADMIN";
   if (email === USER_EMAIL) return "USER";
+  if (email === USER_TEST_EMAIL) return "USER";
   return null;
 }
 

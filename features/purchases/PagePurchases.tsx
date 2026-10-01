@@ -113,15 +113,20 @@ export default function PagePurchases({
 
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
-      <FieldSet className="flex flex-1  justify-start pt-4">
+      <FieldSet className="flex flex-1  justify-start pt-3">
         <FieldGroup>
           <FieldLabel
-            className="text-base text-blue-700 flex items-center justify-end  gap-6 px-3 mb-4 w-full"
+            className="text-base text-blue-700 flex items-center justify-end  gap-6 px-3 mb-3 w-full"
             htmlFor="picture"
           >
             <Upload className="w-4 h-4" />
             фото
           </FieldLabel>
+          <FieldForm
+            icon={<ShoppingBasket className="w-5 h-5" />}
+            label="оплата"
+            fieldName="payment"
+          />
           <FieldForm
             icon={<ReceiptText className="w-5 h-5" />}
             label="закупка"
@@ -136,11 +141,6 @@ export default function PagePurchases({
             icon={<Car className="w-5 h-5" />}
             label="мойка авто"
             fieldName="cleaning"
-          />
-          <FieldForm
-            icon={<ShoppingBasket className="w-5 h-5" />}
-            label="оплата"
-            fieldName="payment"
           />
           <div className="flex items-center justify-end px-3 text-xs font-bold text-blue-600">
             {total}

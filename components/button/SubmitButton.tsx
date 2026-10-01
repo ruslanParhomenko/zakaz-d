@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowBigLeft, ArrowLeft, Save } from "lucide-react";
 
 export default function SubmitButton({
   isSubmitting,
@@ -10,7 +10,7 @@ export default function SubmitButton({
 }) {
   const router = useRouter();
   return (
-    <div className="mt-0 py-2 flex items-center justify-end gap-10">
+    <div className="py-1 flex items-center justify-end gap-8">
       <Button
         variant="ghost"
         className="h-8 w-18"
@@ -18,7 +18,7 @@ export default function SubmitButton({
         aria-label="Назад"
         onClick={() => router.back()}
       >
-        <ArrowLeft className="h-4 w-12 font-bold text-red-600" />
+        <ArrowBigLeft className="font-bold text-red-600 size-6 fill-red-600" />
       </Button>
 
       <Button

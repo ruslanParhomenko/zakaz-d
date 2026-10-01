@@ -37,20 +37,20 @@ export function ActionFooterBar() {
   return (
     <div className="flex h-full justify-around items-center px-8 w-full">
       <Button
-        className="w-22 cursor-pointer h-12 text-2xl border-2 border-blue-600"
+        className="w-22 cursor-pointer h-14 bg-border/60"
         variant={"outline"}
         onClick={() => addCashUrl()}
         disabled={isPending}
       >
-        <Plus className="text-blue-600 size-6" strokeWidth={6} />
+        <Plus className="text-blue-500 size-6" strokeWidth={6} />
       </Button>
       <Button
-        className="w-22 cursor-pointer h-12 text-2xl border-2 border-red-600"
+        className="w-22 cursor-pointer h-14 bg-border/60"
         variant={"outline"}
         onClick={() => purchasesUrl()}
         disabled={isPending}
       >
-        <Minus className="text-red-600 size-6" strokeWidth={6} />
+        <Minus className="text-red-500 size-6" strokeWidth={6} />
       </Button>
     </div>
   );

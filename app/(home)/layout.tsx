@@ -10,7 +10,7 @@ export default function HomeLayout({
       <Suspense fallback={null}>
         <NavHeader />
       </Suspense>
-      <main className="flex  flex-1 flex-col overflow-y-auto items-center p-3">
+      <main className="flex  flex-1 flex-col overflow-y-auto items-center p-2">
         {children}
       </main>
       <Suspense fallback={null}>
