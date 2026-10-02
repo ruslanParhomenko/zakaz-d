@@ -5,6 +5,8 @@ import { FieldSet } from "@/components/ui/field";
 import { Coins } from "lucide-react";
 import { GetAddCashByMonthYearType } from "../model/type";
 import { useAddCashForm } from "../hooks/use-add-cash-form";
+import { useSwipeable } from "react-swipeable";
+import { useRouter } from "next/navigation";
 
 export function AddCashForm({
   data,
@@ -17,6 +19,8 @@ export function AddCashForm({
   month: number;
   year: number;
 }) {
+  const router = useRouter();
+
   const valuesByData =
     data && day
       ? { date: new Date(year, month - 1, day), addCash: data.addCash }
@@ -24,9 +28,17 @@ export function AddCashForm({
 
   const { form, onSubmit } = useAddCashForm({ valuesByData });
 
+  const handlers = useSwipeable({
+    onSwipedRight: () => router.back(),
+    delta: 50,
+  });
+
   return (
-    <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
-      <FieldSet className="flex flex-1 items-center justify-center pb-20">
+    <FormWrapperWithDate onSubmit={onSubmit} form={form}>
+      <FieldSet
+        className="flex flex-1 items-center justify-center pb-20"
+        {...handlers}
+      >
         <FieldForm
           icon={<Coins className="w-5 h-5" />}
           label="Деньги"

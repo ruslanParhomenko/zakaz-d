@@ -9,12 +9,10 @@ export default function FormWrapperWithDate({
   onSubmit,
   children,
   form,
-  disabledData,
 }: {
   children: React.ReactNode;
   onSubmit: SubmitHandler<any>;
   form: UseFormReturn<any>;
-  disabledData?: boolean;
 }) {
   return (
     <Form {...form}>
@@ -23,7 +21,7 @@ export default function FormWrapperWithDate({
         className="w-full flex flex-col h-full"
       >
         <div className="flex w-full items-center justify-center py-1">
-          <DatePickerInput fieldName="date" disabled={disabledData} />
+          <DatePickerInput fieldName="date" />
         </div>
 
         {children}

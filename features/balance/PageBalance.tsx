@@ -44,7 +44,7 @@ export default function PageBalance({
     });
   }, [month, year]);
   return (
-    <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={true}>
+    <FormWrapperWithDate onSubmit={onSubmit} form={form}>
       <FieldSet className="flex flex-1 items-center justify-center">
         <FieldForm
           icon={<Wallet className="w-5 h-5" />}

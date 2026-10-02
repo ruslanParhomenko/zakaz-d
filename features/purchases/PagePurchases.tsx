@@ -18,6 +18,9 @@ import { createUrlPhotoByDay } from "@/app/actions/url-photo/urlAction";
 import { resizeFileIfNeeded } from "@/utils/resizeFileImg";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useSwipeable } from "react-swipeable";
+import { useRouter } from "next/navigation";
+
 export default function PagePurchases({
   data,
   day,
@@ -29,6 +32,8 @@ export default function PagePurchases({
   month: number;
   year: number;
 }) {
+  const router = useRouter();
+
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const form = useForm<PurchaseType>({
@@ -104,9 +109,14 @@ export default function PagePurchases({
     });
   }, [data]);
 
+  const handlers = useSwipeable({
+    onSwipedRight: () => router.back(),
+    delta: 50,
+  });
+
   return (
-    <FormWrapperWithDate onSubmit={onSubmit} form={form} disabledData={!!data}>
-      <FieldSet className="flex flex-1  justify-start pt-3">
+    <FormWrapperWithDate onSubmit={onSubmit} form={form}>
+      <FieldSet className="flex flex-1  justify-start pt-3" {...handlers}>
         <FieldGroup>
           <FieldLabel
             className="text-base text-blue-700 flex items-center justify-end  gap-6 px-3 mb-3 w-full"
