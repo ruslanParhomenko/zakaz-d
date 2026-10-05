@@ -89,7 +89,9 @@ export default function PagePurchases({
         payment: data.payment,
       });
 
-      toast.success("Данные сохранены");
+      toast.success("Данные сохранены", {
+        description: `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()} = ${total}`,
+      });
       setSelectedFiles([]);
     } catch (error) {
       toast.error("Ошибка загрузки фото");
