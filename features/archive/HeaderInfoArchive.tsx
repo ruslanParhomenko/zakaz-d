@@ -28,15 +28,12 @@ export default function HeaderInfoArchive({
           <span className="font-bold">остаток:</span> {remainingBalance}
         </Label>
       </div>
-      <div className="flex flex-row justify-between text-xs">
+      <div className="flex flex-row justify-between text-xs px-4">
         <span>
           <span className="font-medium pr-1">закупка:</span> {totalPurchase}
         </span>
         <span>
           <span className="font-medium p-1">топливо:</span> {totalFuel}
-        </span>
-        <span>
-          <span className="font-medium p-1">хим-ка:</span> {totalCleaning}
         </span>
         <span>
           <span className="font-medium p-1">оплата:</span> {totalPayment}

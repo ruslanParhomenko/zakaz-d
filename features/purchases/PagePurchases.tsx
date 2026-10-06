@@ -1,6 +1,14 @@
 "use client";
 import { FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Car, Fuel, ReceiptText, ShoppingBasket, Upload } from "lucide-react";
+import {
+  Car,
+  Fuel,
+  ReceiptText,
+  Shirt,
+  ShoppingBasket,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import {
   createPurchaseByDay,
@@ -14,27 +22,36 @@ import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
 import FieldForm from "@/components/input/FieldForm";
 import ViewUploadedFoto from "./ViewUploadedFoto";
 import { uploadToImgBB } from "@/app/actions/uploadedImgBB/upload-imgbb";
-import { createUrlPhotoByDay } from "@/app/actions/url-photo/urlAction";
+import {
+  createUrlPhotoByDay,
+  deleteUrlPhotoByDay,
+} from "@/app/actions/url-photo/urlAction";
 import { resizeFileIfNeeded } from "@/utils/resizeFileImg";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useSwipeable } from "react-swipeable";
 import { useRouter } from "next/navigation";
+import ViewSelectPhoto from "../foto/ViewSelectPhoto";
+import { Label } from "@/components/ui/label";
 
 export default function PagePurchases({
   data,
   day,
   month,
   year,
+  urlsFoto,
 }: {
   data?: PurchasesTypeData["days"][number];
   day?: number;
   month: number;
   year: number;
+  urlsFoto?: string[] | null | undefined;
 }) {
   const router = useRouter();
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   const form = useForm<PurchaseType>({
     resolver: zodResolver(schemaPurchase),
@@ -59,25 +76,36 @@ export default function PagePurchases({
     setSelectedFiles((prev) => [...prev, ...processedFiles]);
   };
 
+  const handleDeletePhoto = async () => {
+    if (!day) return;
+    try {
+      await deleteUrlPhotoByDay({ day, month, year });
+      toast.success("Фото удалено");
+      router.refresh();
+    } catch {
+      toast.error("Ошибка удаления фото");
+    }
+  };
+
   const onSubmit: SubmitHandler<PurchaseType> = async (data) => {
     try {
-      if (selectedFiles.length > 0) {
-        const result = await uploadToImgBB(selectedFiles);
+      // if (selectedFiles.length > 0) {
+      //   const result = await uploadToImgBB(selectedFiles);
 
-        if (!result.success) {
-          toast.error(result.error);
-          return;
-        }
+      //   if (!result.success) {
+      //     toast.error(result.error);
+      //     return;
+      //   }
 
-        const photoUrls = result.urls;
-        await createUrlPhotoByDay({
-          day: data.date.getDate(),
-          month: data.date.getMonth() + 1,
-          year: data.date.getFullYear(),
-          urls: photoUrls as string[],
-        });
-        toast.success(`Загружено ${photoUrls?.length} фото`);
-      }
+      //   const photoUrls = result.urls;
+      //   await createUrlPhotoByDay({
+      //     day: data.date.getDate(),
+      //     month: data.date.getMonth() + 1,
+      //     year: data.date.getFullYear(),
+      //     urls: photoUrls as string[],
+      //   });
+      //   toast.success(`Загружено ${photoUrls?.length} фото`);
+      // }
 
       await createPurchaseByDay({
         day: data.date.getDate(),
@@ -109,7 +137,7 @@ export default function PagePurchases({
       cleaning: data.cleaning,
       payment: data.payment,
     });
-  }, [data]);
+  }, [data, day, month, year, form]);
 
   const handlers = useSwipeable({
     onSwipedRight: () => router.back(),
@@ -118,15 +146,15 @@ export default function PagePurchases({
 
   return (
     <FormWrapperWithDate onSubmit={onSubmit} form={form}>
-      <FieldSet className="flex flex-1  justify-start pt-3" {...handlers}>
+      <FieldSet className="flex flex-1  justify-center" {...handlers}>
         <FieldGroup>
-          <FieldLabel
+          {/* <FieldLabel
             className="text-base text-blue-700 flex items-center justify-end  gap-6 px-3 mb-3 w-full"
             htmlFor="picture"
           >
             <Upload className="w-4 h-4" />
             фото
-          </FieldLabel>
+          </FieldLabel> */}
           <FieldForm
             icon={<ShoppingBasket className="w-5 h-5" />}
             label="оплата"
@@ -142,6 +170,13 @@ export default function PagePurchases({
             label="топливо"
             fieldName="fuel"
           />
+          {day && (
+            <FieldForm
+              icon={<Shirt className="w-5 h-5" />}
+              label="мойка авто"
+              fieldName="cleaning"
+            />
+          )}
 
           <div className="flex items-center justify-end px-3 text-xs font-bold text-blue-600">
             {total}
@@ -159,6 +194,39 @@ export default function PagePurchases({
             data={selectedFiles}
             setSelectedFiles={setSelectedFiles}
           />
+          {day && (
+            <>
+              <div className="grid grid-cols-3 gap-2">
+                {urlsFoto?.map((src) => (
+                  <div key={src} className="flex flex-col gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPhoto(src)}
+                      className="relative aspect-square overflow-hidden"
+                    >
+                      <img
+                        src={src}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePhoto()}
+                      className="flex justify-center text-red-600 py-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <ViewSelectPhoto
+                selectedPhoto={selectedPhoto || ""}
+                setSelectedPhoto={setSelectedPhoto}
+              />
+            </>
+          )}
         </FieldGroup>
       </FieldSet>
     </FormWrapperWithDate>

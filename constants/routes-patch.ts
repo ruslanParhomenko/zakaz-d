@@ -1,1 +1,1 @@
-export const ROUTE_PATCH_TABS = ["balance", "foto", "archive", "form"];
+export const ROUTE_PATCH_TABS = ["balance", "archive", "form"];

@@ -2,6 +2,7 @@ import {
   getPurchasesByMonthYear,
   PurchasesTypeData,
 } from "@/app/actions/purchases/purchasesAction";
+import { getAddUrlsByMonthYear } from "@/app/actions/url-photo/urlAction";
 import PagePurchases from "@/features/purchases/PagePurchases";
 
 export default async function Page({
@@ -17,8 +18,10 @@ export default async function Page({
 
   const docId = `${year}-${month}`;
   const dataPurchases = (await getPurchasesByMonthYear(
-    docId
+    docId,
   )) as PurchasesTypeData;
+
+  // const dataUrls = await getAddUrlsByMonthYear(docId);
 
   const dataByDay = dataPurchases?.days?.[+day];
 
