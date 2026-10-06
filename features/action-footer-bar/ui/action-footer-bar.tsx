@@ -44,7 +44,7 @@ export function ActionFooterBar({
 
   return (
     <div className="grid grid-rows-[auto_1fr] gap-2 w-full h-full">
-      <div className="flex flex-col h-[80dvh]">
+      <div className="flex flex-col h-[70dvh]">
         <ArchiveTable
           month={month}
           year={year}

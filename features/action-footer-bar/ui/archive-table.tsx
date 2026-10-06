@@ -18,7 +18,7 @@ export default function ArchiveTable({
 
   return (
     <>
-      <Table className="table-fixed w-full border-collapse">
+      <Table className="table-fixed w-full border-separate border-spacing-y-0.5">
         <TableBody>
           {days.map((row) => {
             const purchaseByDay = dataPurchases?.days?.[row.day];
@@ -37,18 +37,22 @@ export default function ArchiveTable({
             return (
               <TableRow
                 key={row.day}
-                className="cursor-pointer border-0  [&>td]:border-0 [&>td]:p-1"
+                className="cursor-pointer border-0  [&>td]:border-0 [&>td]:py-0.5"
               >
                 <TableCell
-                  className={cn("w-1/4", income && "text-blue-800 bg-border")}
+                  className={cn(
+                    "w-1/4",
+                    income && "text-blue-800 bg-border rounded-md",
+                  )}
                 >
-                  {" "}
                   {income > 0 && String(row.day).padStart(2, "0")}
                 </TableCell>
                 <TableCell
-                  className={cn("w-1/4", expense && "text-red-800 bg-border")}
+                  className={cn(
+                    "w-1/4",
+                    expense && "text-red-800 bg-border rounded-md",
+                  )}
                 >
-                  {" "}
                   {expense > 0 && String(row.day).padStart(2, "0")}
                 </TableCell>
               </TableRow>
