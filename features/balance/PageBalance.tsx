@@ -1,7 +1,7 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BalanceType, defaultValuesBalance, schemaBalance } from "./schema";
-import { yupResolver } from "@hookform/resolvers/yup";
+
 import { FieldSet } from "@/components/ui/field";
 
 import { useEffect } from "react";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import FormWrapperWithDate from "@/components/wrapper/FormWrapper";
 import FieldForm from "@/components/input/FieldForm";
 import { Wallet } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function PageBalance({
   month,
@@ -19,7 +20,7 @@ export default function PageBalance({
   year: number;
 }) {
   const form = useForm<BalanceType>({
-    resolver: yupResolver(schemaBalance),
+    resolver: zodResolver(schemaBalance),
     defaultValues: defaultValuesBalance,
   });
   const onSubmit: SubmitHandler<BalanceType> = async (data) => {
