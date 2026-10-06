@@ -41,14 +41,14 @@ export default function PagePurchases({
     defaultValues: defaultValuesPurchase,
   });
 
-  const [purchase = 0, fuel = 0, cleaning = 0, payment = 0] = useWatch({
+  const [purchase = 0, fuel = 0, payment = 0] = useWatch({
     control: form.control,
     name: ["purchase", "fuel", "cleaning", "payment"],
   });
 
   const total = useMemo(
-    () => Number(purchase) + Number(fuel) + Number(cleaning) + Number(payment),
-    [purchase, fuel, cleaning, payment],
+    () => Number(purchase) + Number(fuel) + Number(payment),
+    [purchase, fuel, payment],
   );
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,11 +142,7 @@ export default function PagePurchases({
             label="топливо"
             fieldName="fuel"
           />
-          <FieldForm
-            icon={<Car className="w-5 h-5" />}
-            label="мойка авто"
-            fieldName="cleaning"
-          />
+
           <div className="flex items-center justify-end px-3 text-xs font-bold text-blue-600">
             {total}
           </div>
